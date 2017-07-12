@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+	xmlns:cellml="http://www.cellml.org/cellml/1.1#" cmeta:id="riceCalciumTransient"
+	name="rice_cai">
+
+	<units name="millisecond">
+		<unit units="second" prefix="milli" />
+	</units>
+	<units name="per_millisecond">
+		<unit units="millisecond" exponent="-1" />
+	</units>
+
+	<component name="interface">
+		<variable name="time" public_interface="in"
+			private_interface="out" units="millisecond" />
+		<variable name="stepStart" public_interface="in"
+			private_interface="out" units="millisecond" />
+		<variable name="stepDuration" public_interface="in"
+			private_interface="out" units="millisecond" />
+		<variable name="lambda1" public_interface="in"
+			private_interface="out" units="dimensionless" />
+		<variable name="lambda2" public_interface="in"
+			private_interface="out" units="dimensionless" />
+		<variable name="lambda_dot" public_interface="out"
+			private_interface="in" units="per_millisecond" />
+	</component>
+	
+	<connection>
+		<map_components component_1="interface" component_2="transient"/>
+		<map_variables variable_1="time" variable_2="time"/>
+		<map_variables variable_1="stepStart" variable_2="stepStart"/>
+		<map_variables variable_1="stepDuration" variable_2="stepDuration"/>
+		<map_variables variable_1="lambda1" variable_2="lambda1"/>
+		<map_variables variable_1="lambda2" variable_2="lambda2"/>
+		<map_variables variable_1="lambda_dot" variable_2="lambda_dot"/>
+	</connection>
+
+	<component name="transient">
+		<variable name="time" public_interface="in" units="millisecond" />
+		<variable name="stepStart" public_interface="in" units="millisecond" />
+		<variable name="stepDuration" public_interface="in" units="millisecond" />
+		<variable name="lambda1" public_interface="in" units="dimensionless" />
+		<variable name="lambda2" public_interface="in" units="dimensionless" />
+
+		<variable name="lambda_dot" public_interface="out" units="per_millisecond" />
+
+		<math xmlns="http://www.w3.org/1998/Math/MathML">
+			<apply><eq/>
+				<ci>lambda_dot</ci>
+				<piecewise>
+					<piece>
+						<cn cellml:units="per_millisecond">0.0</cn>
+						<apply><or/>
+							<apply><lt/>
+								<ci>time</ci>
+								<ci>stepStart</ci>
+							</apply>
+							<apply><gt/>
+								<ci>time</ci>
+								<apply><plus/>
+									<ci>stepStart</ci>
+									<ci>stepDuration</ci>
+								</apply>
+							</apply>
+						</apply>
+					</piece>
+					<otherwise>
+						<apply><divide/>
+							<apply><minus/>
+								<ci>lambda2</ci>
+								<ci>lambda1</ci>
+							</apply>
+							<ci>stepDuration</ci>
+						</apply>
+					</otherwise>
+				</piecewise>
+			</apply>
+		</math>
+	</component>
+
+	<group>
+		<relationship_ref relationship="encapsulation" />
+		<component_ref component="interface">
+			<component_ref component="transient" />
+		</component_ref>
+	</group>
+</model>

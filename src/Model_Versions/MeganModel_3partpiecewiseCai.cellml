@@ -1,0 +1,200 @@
+<?xml version='1.0'?>
+<model name="Model_3_isometric" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <units name="unit_normalised_force" base_units="yes"/>
+    <units name="unit_normalised_force_millisecond2_per_micrometre">
+        <unit units="unit_normalised_force"/>
+        <unit exponent="2" units="millisecond"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="millisecond">
+        <unit prefix="milli" units="second"/>
+    </units>
+    <units name="per_ms">
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="micromolar">
+        <unit prefix="micro" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="mM">
+        <unit prefix="milli" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="micrometre">
+        <unit units="metre" prefix="micro"/>
+    </units>
+    <import xlink:href="PiecewiseCa2.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <component component_ref="interface" name="HINCHcalcium"/>
+    </import>
+    <!-- import the hinch model with interface-->
+    <import xlink:href="QuickReleaseProtocol.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <component component_ref="interface" name="LambdaDotTransient"/>
+    </import>
+    <import xlink:href="RiceTran_workloop_cycling_fixedCai.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <component component_ref="interface" name="RiceTran"/>
+    </import>
+    <!-- import model1Hinch -->
+    <component name="time">
+        <variable name="time" public_interface="out" units="millisecond"/>
+    </component>
+    <component name="parameters">
+        <!-- Variables added to this component-->
+        <variable units="dimensionless" public_interface="in" name="active_tension" />
+        <variable units="micromolar" public_interface="in" name="Ca_i" /> 
+        <!-- <variable units="millisecond" public_interface="in" name="stimTime" /> -->
+        <variable units="celsius" public_interface="in" name="TmpC" />
+        <variable units="micrometre" public_interface="in" name="SL"/> 
+        <variable units="micrometre" public_interface="in" name="SLrest"/>
+        <variable units="micrometre" public_interface="in" name="SLset"/>
+        <variable units="mV" public_interface="in" name="Vm" /> 
+        <variable name="afterload" units="unit_normalised_force" public_interface="in"/> 
+        <variable name="preload" units="unit_normalised_force" public_interface="in"/> 
+        <variable name="passive" units="unit_normalised_force" public_interface="in"/> 
+        <variable name="SEon" units="dimensionless" public_interface="in"/>
+        <variable name="mass" units="unit_normalised_force_millisecond2_per_micrometre" public_interface="in"/>
+        <variable name="integral_force" units="unit_normalised_force_millisecond" public_interface="in"/>
+        <variable name="F_total" units="dimensionless" public_interface="in"/>  
+        <variable name="XB_cycling" units="unit_normalised_force" public_interface="in" private_interface="out"/>
+        <variable name="dSL" public_interface="in" private_interface="out" units="micrometre_per_millisecond"/>
+        <variable name="iteration_time" public_interface="in" units="millisecond"/>
+        <variable name="t" public_interface="in" units="millisecond"/>
+        
+        <variable name="gxbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="XBpostr" public_interface="in" units="dimensionless"/>
+        <variable name="hfT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="SOVFThick" public_interface="in" units="dimensionless"/>
+        <variable name="xXBpostr" public_interface="in" units="micrometre"/>
+        <variable name="XBprer" public_interface="in" units="dimensionless"/>
+        <variable name="xXBprer" public_interface="in" units="micrometre"/>
+        
+        <variable name="fxbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="fappT" public_interface="in" units="first_order_rate_constant"/>
+        
+        <variable name="P" public_interface="in" units="dimensionless"/>
+        <variable name="N" public_interface="in" units="dimensionless"/>
+        <variable name="kn_pT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="kp_nT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="SOVFThin" public_interface="in" units="dimensionless"/>
+        <variable units="micromolar_per_ms" name="dTropTot" public_interface="in"/>
+    
+    
+        <!-- original variables in this component -->
+        <variable initial_value="1.0" name="initialLambda" public_interface="out" units="dimensionless"/>
+        <variable initial_value="1.0" name="finalLambda" public_interface="out" units="dimensionless"/>
+        <variable initial_value="88" name="stepStart" public_interface="out" units="millisecond"/>
+        <variable initial_value="3" name="stepDuration" public_interface="out" units="millisecond"/>
+        <variable initial_value="1" name="VelocitySwitch" public_interface="out" units="dimensionless"/>
+        <!-- original value is 1 -->
+        <variable initial_value="1.0" name="velocitySF" public_interface="out" units="dimensionless"/>
+        <variable initial_value="1" name="xbmodsp" public_interface="out" units="dimensionless"/>
+        
+        <variable name="tstart" public_interface="out"
+			initial_value="2.2184" units="millisecond" />
+		<variable name="Tau1" public_interface="out"
+			initial_value="26.49196" units="millisecond" />
+		<variable name="Tau2" public_interface="out"
+			initial_value="28.747" units="millisecond" />
+        <variable name="Tau3" public_interface="out"
+			initial_value="108.855" units="millisecond" />
+        <variable name="Ca_dia" public_interface="out"
+			initial_value="0.0894" units="micromolar" />
+        <variable name="a1" public_interface="out"
+			initial_value="0.216216" units="dimensionless" />
+        <variable name="b" public_interface="out"
+			initial_value="33.1457" units="millisecond" />
+        <variable name="k1" public_interface="out"
+			initial_value="1.8330" units="dimensionless" />
+        <variable name="c" public_interface="out"
+			initial_value="63.86981" units="millisecond" />
+
+    </component>
+    <connection>
+        <map_components component_1="LambdaDotTransient" component_2="time"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="RiceTran" component_2="time"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <!-- connecting the hinch model to time -->
+        <map_components component_1="HINCHcalcium" component_2="time"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="HINCHcalcium" component_2="RiceTran"/>
+        <map_variables variable_1="Cai" variable_2="Ca_i"/>
+    </connection>
+    <connection>
+        <map_components component_1="HINCHcalcium" component_2="parameters"/>
+        <map_variables variable_1="Cai" variable_2="Ca_i"/>
+        <map_variables variable_1="Vm" variable_2="Vm"/>
+        <map_variables variable_1="Tau1" variable_2="Tau1"/>
+        <map_variables variable_1="Tau2" variable_2="Tau2"/>
+        <map_variables variable_1="Tau3" variable_2="Tau3"/>
+        <map_variables variable_1="Ca_dia" variable_2="Ca_dia"/>
+        <map_variables variable_1="a1" variable_2="a1"/>
+        <map_variables variable_1="b" variable_2="b"/>
+        <map_variables variable_1="k1" variable_2="k1"/>
+        <map_variables variable_1="c" variable_2="c"/>
+        <map_variables variable_1="tstart" variable_2="tstart"/>
+        <map_variables variable_1="t" variable_2="t"/>
+        <map_variables variable_1="iteration_time" variable_2="iteration_time"/>
+        
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="RiceTran"/>
+        <map_variables variable_1="VelocitySwitch" variable_2="VelocitySwitch"/>
+        <map_variables variable_1="velocitySF" variable_2="velocitySF"/>
+        <map_variables variable_1="initialLambda" variable_2="lambda"/>
+        <map_variables variable_1="xbmodsp" variable_2="xbmodsp"/>
+        <map_variables variable_1="active_tension" variable_2="active_tension"/>
+        <map_variables variable_1="TmpC" variable_2="TmpC"/>
+        <map_variables variable_1="SL" variable_2="SL"/> 
+        <map_variables variable_1="SLrest" variable_2="SLrest"/>
+        <map_variables variable_1="SLset" variable_2="SLset"/>
+        <map_variables variable_1="afterload" variable_2="afterload"/>
+        <map_variables variable_1="SEon" variable_2="SEon"/>
+        <map_variables variable_1="mass" variable_2="mass"/>
+        <map_variables variable_1="integral_force" variable_2="integral_force"/>
+        <map_variables variable_1="F_total" variable_2="F_total"/>
+        <map_variables variable_1="preload" variable_2="preload"/>
+        <map_variables variable_1="passive" variable_2="passive"/>
+        <map_variables variable_1="XB_cycling" variable_2="XB_cycling"/>
+        <map_variables variable_1="dSL" variable_2="dSL"/>
+        
+        <map_variables variable_1="gxbT" variable_2="gxbT"/>
+        <map_variables variable_1="XBpostr" variable_2="XBpostr"/>
+        <map_variables variable_1="hfT" variable_2="hfT"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+        <map_variables variable_1="xXBpostr" variable_2="xXBpostr"/>
+        <map_variables variable_1="XBprer" variable_2="XBprer"/>
+        <map_variables variable_1="xXBprer" variable_2="xXBprer"/>
+        
+        <map_variables variable_1="fxbT" variable_2="fxbT"/>
+        <map_variables variable_1="hbT" variable_2="hbT"/>
+        <map_variables variable_1="gappT" variable_2="gappT"/>
+        <map_variables variable_1="fappT" variable_2="fappT"/>
+        
+        <map_variables variable_1="P" variable_2="P"/>
+        <map_variables variable_1="N" variable_2="N"/>
+        <map_variables variable_1="kn_pT" variable_2="kn_pT"/>
+        <map_variables variable_1="kp_nT" variable_2="kp_nT"/>
+        <map_variables variable_1="SOVFThin" variable_2="SOVFThin"/>
+        <map_variables variable_1="dTropTot" variable_2="dTropTot"/>
+        
+    </connection>
+    <connection>
+        <map_components component_1="parameters" component_2="LambdaDotTransient"/>
+        <map_variables variable_1="initialLambda" variable_2="lambda1"/>
+        <map_variables variable_1="finalLambda" variable_2="lambda2"/>
+        <map_variables variable_1="stepStart" variable_2="stepStart"/>
+        <map_variables variable_1="stepDuration" variable_2="stepDuration"/>
+    </connection>
+    <connection>
+        <map_components component_1="RiceTran" component_2="LambdaDotTransient"/>
+        <map_variables variable_1="lambda_dot" variable_2="lambda_dot"/>
+    </connection>
+</model>

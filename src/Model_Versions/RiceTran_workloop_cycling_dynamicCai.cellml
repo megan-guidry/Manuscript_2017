@@ -1,0 +1,3049 @@
+<?xml version='1.0'?>
+<model cmeta:id="tran_model_2009" name="tran_model_2009" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <units base_units="yes" name="unit_normalised_force"/>
+    <units name="unit_normalised_force_millisecond2_per_micrometre">
+        <unit units="unit_normalised_force"/>
+        <unit exponent="2" units="millisecond"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="millimeter_squared">
+        <unit exponent="2" prefix="milli" units="metre"/>
+    </units>
+    <units name="per_mm_squared">
+        <unit exponent="-1" units="millimeter_squared"/>
+    </units>
+    <units name="unit_normalised_force_millisecond">
+        <unit units="unit_normalised_force"/>
+        <unit units="millisecond"/>
+    </units>
+    <units name="unit_normalised_force_millisecond_per_micrometre">
+        <unit units="unit_normalised_force"/>
+        <unit units="millisecond"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="unit_normalised_force_per_micrometre">
+        <unit units="unit_normalised_force"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="micrometre">
+        <unit prefix="micro" units="metre"/>
+    </units>
+    <units name="per_micrometre">
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="micrometre_per_millisecond">
+        <unit units="micrometre"/>
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="millisecond_per_micrometre">
+        <unit units="millisecond"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="millisecond">
+        <unit prefix="milli" units="second"/>
+    </units>
+    <units name="per_millisecond">
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="millisecond2_per_micrometre">
+        <unit exponent="2" units="millisecond"/>
+        <unit exponent="-1" units="micrometre"/>
+    </units>
+    <units name="per_mole">
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <units name="per_Litre">
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="micromolar">
+        <unit prefix="micro" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="Molar">
+        <unit units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="um_per_Liter">
+        <unit prefix="micro" units="metre"/>
+        <unit units="per_Litre"/>
+    </units>
+    <units name="micromolar2">
+        <unit exponent="2" units="micromolar"/>
+    </units>
+    <units name="micromolar_per_millisecond">
+        <unit units="micromolar"/>
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="first_order_rate_constant">
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="second_order_rate_constant">
+        <unit exponent="-1" units="micromolar"/>
+        <unit exponent="-1" units="millisecond"/>
+    </units>
+    <units name="milliNewton">
+        <unit prefix="milli" units="newton"/>
+    </units>
+    <units name="millinewton_per_millimetre2">
+        <unit prefix="milli" units="newton"/>
+        <unit exponent="-2" prefix="milli" units="metre"/>
+    </units>
+    <units name="millinewton_micrometre_per_millimetre2">
+        <unit prefix="milli" units="newton"/>
+        <unit prefix="micro" units="metre"/>
+        <unit exponent="-2" prefix="milli" units="metre"/>
+    </units>
+    <units name="millinewton_micrometre_per_millimetre2_per_millisecond">
+        <unit prefix="milli" units="newton"/>
+        <unit prefix="micro" units="metre"/>
+        <unit exponent="-2" prefix="milli" units="metre"/>
+        <unit exponent="-1" prefix="milli" units="second"/>
+    </units>
+    <group>
+        <relationship_ref relationship="encapsulation"/>
+        <component_ref component="interface">
+            <component_ref component="sarcomere_geometry"/>
+            <component_ref component="Ca_binding_to_troponin_to_thin_filament_regulation"/>
+            <component_ref component="thin_filament_regulation_and_crossbridge_cycling_rates"/>
+            <component_ref component="regulation_and_crossbridge_cycling_state_equations"/>
+            <component_ref component="mean_strain_of_strongly_bound_states"/>
+            <component_ref component="normalised_active_and_passive_force"/>
+            <component_ref component="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding"/>
+            <component_ref component="model_parameters"/>
+        </component_ref>
+    </group>
+    <component name="interface">
+        <!-- inputs -->
+        <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
+        <variable name="Ca_i" private_interface="out" public_interface="in" units="micromolar"/>
+        <variable name="active_tension" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="preload" private_interface="in" public_interface="out" units="unit_normalised_force"/>
+        <variable name="passive" private_interface="in" public_interface="out" units="unit_normalised_force"/>
+        <variable initial_value="23" name="TmpC" private_interface="out" public_interface="out" units="celsius"/>
+        <variable initial_value="0.007" name="x_0" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable name="lambda" private_interface="out" public_interface="in" units="dimensionless"/>
+        <variable name="lambda_dot" private_interface="out" public_interface="in" units="per_millisecond"/>
+        <variable name="velocitySF" private_interface="out" public_interface="in" units="dimensionless"/>
+        <variable name="VelocitySwitch" private_interface="out" public_interface="in" units="dimensionless"/>
+        <variable initial_value="1.9" name="SLrest" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="2.3" name="SLset" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable name="xbmodsp" private_interface="out" public_interface="in" units="dimensionless"/>
+        <variable name="dTropTot" private_interface="in" public_interface="out" units="micromolar_per_millisecond"/>
+        <variable name="SL" private_interface="in" public_interface="out" units="micrometre"/>
+        <variable name="afterload" private_interface="in" public_interface="out" units="unit_normalised_force"/>
+        <variable name="integral_force" private_interface="in" public_interface="out" units="unit_normalised_force_millisecond"/>
+        <variable name="F_total" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="SEon" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="mass" private_interface="in" public_interface="out" units="unit_normalised_force_millisecond2_per_micrometre"/>
+        <variable name="ATP_consumption_rate" public_interface="out" private_interface="in" units="first_order_rate_constant"/>
+        <variable name="XB_cycling" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="dSL" public_interface="out" private_interface="in" units="micrometre_per_millisecond"/>
+        
+        <variable name="gxbT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="XBpostr" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="hfT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="SOVFThick" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="xXBpostr" private_interface="in" public_interface="out" units="micrometre"/>
+        <variable name="XBprer" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="xXBprer" private_interface="in" public_interface="out" units="micrometre"/>
+        
+        <variable name="fxbT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="hbT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="gappT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="fappT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        
+        <variable name="P" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="N" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="kn_pT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="kp_nT" private_interface="in" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="SOVFThin" private_interface="in" public_interface="out" units="dimensionless"/>
+        <!-- outputs -->
+    </component>
+    <component name="sarcomere_geometry">
+        <variable name="SOVFThick" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable name="SOVFThin" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable name="sovr_ze" units="micrometre"/>
+        <variable name="sovr_cle" units="micrometre"/>
+        <variable name="len_sovr" units="micrometre"/>
+        <variable name="len_thin" public_interface="in" units="micrometre"/>
+        <variable name="len_thick" public_interface="in" units="micrometre"/>
+        <variable name="len_hbare" public_interface="in" units="micrometre"/>
+        <variable name="SL" public_interface="in" units="micrometre"/>
+        <variable initial_value="1" name="overlap_on_off" units="dimensionless"/> <!-- if this is zero overlap is fixed -->
+        <variable name="SEon" public_interface="in" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>sovr_ze</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <divide/>
+                            <ci>len_thick</ci>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <apply>
+                                <divide/>
+                                <ci>len_thick</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                            <apply>
+                                <divide/>
+                                <ci>SL</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <divide/>
+                            <ci>SL</ci>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>sovr_cle</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <divide/>
+                                <ci>SL</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                            <apply>
+                                <minus/>
+                                <ci>SL</ci>
+                                <ci>len_thin</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <gt/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <divide/>
+                                    <ci>SL</ci>
+                                    <cn cellml:units="dimensionless">2</cn>
+                                </apply>
+                                <apply>
+                                    <minus/>
+                                    <ci>SL</ci>
+                                    <ci>len_thin</ci>
+                                </apply>
+                            </apply>
+                            <apply>
+                                <divide/>
+                                <ci>len_hbare</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <divide/>
+                            <ci>len_hbare</ci>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>len_sovr</ci>
+                <apply>
+                    <minus/>
+                    <ci>sovr_ze</ci>
+                    <ci>sovr_cle</ci>
+                </apply>
+            </apply>
+            
+           <apply>
+                <eq/>
+                <ci>SOVFThick</ci>
+                <piecewise>   
+                        <piece>
+                        <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>len_sovr</ci>
+                        <cn cellml:units="dimensionless">2</cn>
+                    </apply>
+                    <apply>
+                        <minus/>
+                        <ci>len_thick</ci>
+                        <ci>len_hbare</ci>
+                    </apply>
+                </apply>
+                <apply>
+                        <eq/>
+                            <ci>overlap_on_off</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                        </piece>
+
+                    
+                    <otherwise>
+                        <cn cellml:units="dimensionless">0.77419</cn>
+                    </otherwise>
+                </piecewise>
+            </apply> 
+            
+            <!-- <apply>
+                <eq/>
+                <ci>SOVFThick</ci>
+                <piecewise>   
+                        <piece>
+                        <cn cellml:units="dimensionless">0.77419</cn>
+                <apply>
+                        <eq/>
+                            <ci>SEon</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                        </piece>
+
+                    
+                    <otherwise>
+                        
+                        
+                        <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>len_sovr</ci>
+                        <cn cellml:units="dimensionless">2</cn>
+                    </apply>
+                    <apply>
+                        <minus/>
+                        <ci>len_thick</ci>
+                        <ci>len_hbare</ci>
+                    </apply>
+                </apply>
+                    </otherwise>
+                </piecewise>
+            </apply> -->
+            
+            <apply>
+                <eq/>
+                <ci>SOVFThin</ci>
+                <apply>
+                    <divide/>
+                    <ci>len_sovr</ci>
+                    <ci>len_thin</ci>
+                </apply>
+                </apply> 
+            
+            <!-- <apply>
+                <eq/>
+                <ci>SOVFThin</ci>
+                <piecewise>   
+                        <piece>
+                        <cn cellml:units="dimensionless">0.5</cn>
+                    <apply>
+                        <eq/>
+                            <ci>SEon</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                    </apply>
+                        </piece> 
+                    <otherwise>           
+                        <apply>
+                        <divide/>
+                        <ci>len_sovr</ci>
+                        <ci>len_thin</ci>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply> -->
+            
+        </math>
+    </component>
+    <component name="Ca_binding_to_troponin_to_thin_filament_regulation">
+        <variable initial_value="0.0144" name="TRPNCaL" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.1276" name="TRPNCaH" public_interface="out" units="dimensionless"/>
+        <variable name="dTRPNCaL" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="dTRPNCaH" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="kn_pT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="kp_nT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="H" public_interface="out" units="micromolar"/>
+        <variable name="H_cons" public_interface="out" units="micromolar"/>
+        <variable name="konT" units="second_order_rate_constant"/>
+        <variable name="koffLT" units="first_order_rate_constant"/>
+        <variable name="koffHT" units="first_order_rate_constant"/>
+        <variable initial_value="1.5" name="Qkon" units="dimensionless"/>
+        <variable initial_value="1.3" name="Qkoff" units="dimensionless"/>
+        <variable initial_value="1.6" name="Qkn_p" units="dimensionless"/>
+        <variable initial_value="1.6" name="Qkp_n" units="dimensionless"/>
+        <variable initial_value="0.05" name="kon" units="second_order_rate_constant"/>
+        <variable initial_value="0.25" name="koffL" units="first_order_rate_constant"/>
+        <variable initial_value="0.025" name="koffH" units="first_order_rate_constant"/>
+        <variable initial_value="0.5" name="perm50" units="dimensionless"/>
+        <variable initial_value="15" name="nperm" units="dimensionless"/>
+        <variable initial_value="0.5" name="kn_p" units="first_order_rate_constant"/>
+        <variable initial_value="0.05" name="kp_n" units="first_order_rate_constant"/>
+        <variable initial_value="1" name="koffmod" units="dimensionless"/>
+        <variable name="Tropreg" units="dimensionless"/>
+        <variable name="permtot" units="dimensionless"/>
+        <variable name="inprmt" units="dimensionless"/>
+        <variable initial_value="7.15" name="pH" units="dimensionless"/>
+        <variable initial_value="1" name="m" units="dimensionless"/>
+        <variable initial_value="1e-5" name="kdHCa" units="micromolar"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="TmpC" public_interface="in" units="celsius"/>
+        <variable name="SOVFThin" public_interface="in" units="dimensionless"/>
+        <variable name="Ca_i" public_interface="in" units="micromolar"/>
+        <variable name="Ca_i2" units="micromolar"/>
+        <!-- removed public_interface in-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>Ca_i2</ci>
+                <apply>
+                    <times/>
+                    <ci>Ca_i</ci>
+                    <cn cellml:units="dimensionless">1</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>konT</ci>
+                <apply>
+                    <times/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <power/>
+                                <ci>kdHCa</ci>
+                                <ci>m</ci>
+                            </apply>
+                            <apply>
+                                <power/>
+                                <ci>H_cons</ci>
+                                <ci>m</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <power/>
+                                <ci>kdHCa</ci>
+                                <ci>m</ci>
+                            </apply>
+                            <apply>
+                                <power/>
+                                <ci>H</ci>
+                                <ci>m</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                    <ci>kon</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qkon</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>H</ci>
+                <apply>
+                    <times/>
+                    <cn cellml:units="micromolar">10e6</cn>
+                    <apply>
+                        <power/>
+                        <cn cellml:units="dimensionless">10</cn>
+                        <apply>
+                            <minus/>
+                            <ci>pH</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>H_cons</ci>
+                <apply>
+                    <times/>
+                    <cn cellml:units="micromolar">10e6</cn>
+                    <apply>
+                        <power/>
+                        <cn cellml:units="dimensionless">10</cn>
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">7.15</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>koffLT</ci>
+                <apply>
+                    <times/>
+                    <ci>koffL</ci>
+                    <ci>koffmod</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qkoff</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>koffHT</ci>
+                <apply>
+                    <times/>
+                    <ci>koffH</ci>
+                    <ci>koffmod</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qkoff</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>kn_pT</ci>
+                <apply>
+                    <times/>
+                    <ci>kn_p</ci>
+                    <ci>permtot</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qkn_p</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>kp_nT</ci>
+                <apply>
+                    <times/>
+                    <ci>kp_n</ci>
+                    <ci>inprmt</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qkp_n</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>permtot</ci>
+                <apply>
+                    <root/>
+                    <apply>
+                        <abs/>
+                        <apply>
+                            <divide/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <apply>
+                                <plus/>
+                                <cn cellml:units="dimensionless">1</cn>
+                                <apply>
+                                    <power/>
+                                    <apply>
+                                        <divide/>
+                                        <ci>perm50</ci>
+                                        <ci>Tropreg</ci>
+                                    </apply>
+                                    <ci>nperm</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>inprmt</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <divide/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <ci>permtot</ci>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <apply>
+                                <divide/>
+                                <cn cellml:units="dimensionless">1</cn>
+                                <ci>permtot</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">100</cn>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="dimensionless">100</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>TRPNCaL</ci>
+                </apply>
+                <ci>dTRPNCaL</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dTRPNCaL</ci>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>konT</ci>
+                        <ci>Ca_i2</ci>
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <ci>TRPNCaL</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>koffLT</ci>
+                        <ci>TRPNCaL</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>TRPNCaH</ci>
+                </apply>
+                <ci>dTRPNCaH</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dTRPNCaH</ci>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>konT</ci>
+                        <ci>Ca_i2</ci>
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <ci>TRPNCaH</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>koffHT</ci>
+                        <ci>TRPNCaH</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Tropreg</ci>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <ci>TRPNCaL</ci>
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <ci>SOVFThin</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>SOVFThin</ci>
+                        <ci>TRPNCaH</ci>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="thin_filament_regulation_and_crossbridge_cycling_rates">
+        <variable name="fappT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="gappT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="hfT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="hbT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="gxbT" private_interface="out" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="0.5" name="fapp" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="0.07" name="gapp" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="2" name="hf" public_interface="out" units="first_order_rate_constant"/> <!-- non-energetically consistent value = 2-->
+        <variable initial_value="0.4" name="hb" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="0.07" name="gxb" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="6" name="gslmod" units="dimensionless"/>
+        <variable name="hfmd" units="dimensionless"/>
+        <variable name="hbmd" units="dimensionless"/>
+        <variable initial_value="5" name="hfmdc" units="dimensionless"/>
+        <variable initial_value="0" name="hbmdc" units="dimensionless"/>
+        <variable initial_value="0.1" name="sigmap" units="dimensionless"/> <!-- non-energetically consistent value = 8-->
+        <variable initial_value="1" name="sigman" units="dimensionless"/>
+        <variable name="xbmodsp" public_interface="in" units="dimensionless"/>
+        <variable initial_value="6.25" name="Qfapp" units="dimensionless"/>
+        <variable initial_value="2.5" name="Qgapp" units="dimensionless"/>
+        <variable initial_value="6.25" name="Qhf" units="dimensionless"/>
+        <variable initial_value="6.25" name="Qhb" units="dimensionless"/>
+        <variable initial_value="6.25" name="Qgxb" units="dimensionless"/>
+        <variable initial_value="1" name="VD_on_off" units="dimensionless"/>
+        <variable name="gxbmd" units="dimensionless"/>
+        <variable name="gapslmd" units="dimensionless"/>
+        <variable name="x_0" public_interface="in" units="micrometre"/>
+        <variable name="TmpC" public_interface="in" units="celsius"/>
+        <variable name="SOVFThick" public_interface="in" units="dimensionless"/>
+        <variable name="xXBpostr" public_interface="in" units="micrometre"/>
+        <variable name="xXBprer" public_interface="in" units="micrometre"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>fappT</ci>
+                <apply>
+                    <times/>
+                    <ci>fapp</ci>
+                    <ci>xbmodsp</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qfapp</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>gapslmd</ci>
+                <apply>
+                    <plus/>
+                    <cn cellml:units="dimensionless">1</cn>
+                    
+                        <apply>
+                        <times/>
+                        <ci>gslmod</ci>
+                        
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <ci>SOVFThick</ci>
+                        </apply>
+                        </apply>
+                        
+                    
+                    
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>gappT</ci>
+                <apply>
+                
+                    <times/>
+                    <ci>gapp</ci>
+                    <ci>gapslmd</ci>
+                    <ci>xbmodsp</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qgapp</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            
+            <apply>
+                <eq/>
+                <ci>hbmd</ci>
+                <apply>
+                    <exp/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>xXBpostr</ci>
+                                <ci>x_0</ci>
+                            </apply>
+                            <apply>
+                                <abs/>
+                                <apply>
+                                    <minus/>
+                                    <ci>xXBpostr</ci>
+                                    <ci>x_0</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <ci>hbmdc</ci>
+                        <apply>
+                            <power/>
+                            <apply>
+                                <divide/>
+                                <apply>
+                                    <minus/>
+                                    <ci>xXBpostr</ci>
+                                    <ci>x_0</ci>
+                                </apply>
+                                <ci>x_0</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>hfT</ci>
+                <apply>
+                    <times/>
+                    <ci>hf</ci>
+                    <ci>hfmd</ci>
+                    <ci>xbmodsp</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qhf</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>hbT</ci>
+                <apply>
+                    <times/>
+                    <ci>hb</ci>
+                    <ci>hbmd</ci>
+                    <ci>xbmodsp</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qhb</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            
+            <apply>
+                <eq/>
+                <ci>hfmd</ci>
+                <piecewise>   
+                        <piece>
+                        <apply>
+                    <exp/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                            <apply>
+                                <abs/>
+                                <ci>xXBprer</ci>
+                            </apply>
+                        </apply>
+                        <ci>hfmdc</ci>
+                        <apply>
+                            <power/>
+                            <apply>
+                                <divide/>
+                                <ci>xXBprer</ci>
+                                <ci>x_0</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </apply>                   
+                </apply>
+                <apply>
+                        <eq/>
+                            <ci>VD_on_off</ci>
+                            <cn cellml:units="dimensionless">0</cn>
+                        </apply>
+                        </piece>
+
+                    
+                    <otherwise>
+                        <apply>
+                    <exp/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>xXBprer</ci>
+                            </apply>
+                            <apply>
+                                <abs/>
+                                <ci>xXBprer</ci>
+                            </apply>
+                        </apply>
+                        <ci>hfmdc</ci>
+                        <apply>
+                            <power/>
+                            <apply>
+                                <divide/>
+                                <ci>xXBprer</ci>
+                                <ci>x_0</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </apply>                   
+                </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <apply>
+                <eq/>
+                <ci>gxbmd</ci>
+                <piecewise>
+                
+                
+                    <piece>
+                                
+                            <piecewise>
+                            
+                                <piece>
+                                    <apply>
+                                        <exp/>
+                                        <apply>
+                                            <times/>
+                                            <ci>sigmap</ci>
+                                            <apply>
+                                                <power/>
+                                                <apply>
+                                                    <divide/>
+                                                    <apply>
+                                                        <minus/>
+                                                        <ci>x_0</ci>
+                                                        <cn cellml:units="dimensionless">0.007</cn>
+                                                    </apply>
+                                                    <ci>x_0</ci>
+                                                </apply>
+                                                <cn cellml:units="dimensionless">2</cn>
+                                            </apply>
+                                        </apply>
+                                    </apply>
+                                    <apply>
+                                        <lt/>
+                                        <ci>xXBpostr</ci>
+                                        <ci>x_0</ci>
+                                    </apply>
+                               </piece>
+
+                                <otherwise>
+                                    <apply>
+                                        <exp/>
+                                        <apply>
+                                            <times/>
+                                            <ci>sigman</ci>
+                                            <apply>
+                                                <power/>
+                                                <apply>
+                                                    <divide/>
+                                                    <apply>
+                                                        <minus/>
+                                                        <ci>x_0</ci>
+                                                        <cn cellml:units="dimensionless">0.007</cn>
+                                                        
+                                                    </apply>
+                                                    <ci>x_0</ci>
+                                                </apply>
+                                                <cn cellml:units="dimensionless">2</cn>
+                                            </apply>
+                                        </apply>
+                                    </apply>
+                                </otherwise>
+                      </piecewise>
+                            
+                    
+                        <apply>
+                            <eq/>
+                            <ci>VD_on_off</ci>
+                            <cn cellml:units="dimensionless">0</cn>
+                        </apply>
+                </piece>
+            
+            
+            <piece>
+                
+            <piecewise>
+                    <piece>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <times/>
+                                <ci>sigmap</ci>
+                                <apply>
+                                    <power/>
+                                    <apply>
+                                        <divide/>
+                                        <apply>
+                                            <minus/>
+                                            <ci>x_0</ci>
+                                            <ci>xXBpostr</ci>
+                                        </apply>
+                                        <ci>x_0</ci>
+                                    </apply>
+                                    <cn cellml:units="dimensionless">2</cn>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>xXBpostr</ci>
+                            <ci>x_0</ci>
+                        </apply>
+                        </piece>
+
+                    <otherwise>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <times/>
+                                <ci>sigman</ci>
+                                <apply>
+                                    <power/>
+                                    <apply>
+                                        <divide/>
+                                        <apply>
+                                            <minus/>
+                                            <ci>x_0</ci>
+                                            <ci>xXBpostr</ci>
+                                            
+                                        </apply>
+                                        <ci>x_0</ci>
+                                    </apply>
+                                    <cn cellml:units="dimensionless">2</cn>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+              
+                        <apply>
+                            <eq/>
+                            <ci>VD_on_off</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+            </piece>
+                
+            </piecewise>
+            </apply>
+            
+            
+            
+            
+            
+            
+            
+            <apply>
+                <eq/>
+                <ci>gxbT</ci>
+                <apply>
+                    <times/>
+                    <ci>gxb</ci>
+                    <ci>xbmodsp</ci>
+                    <ci>gxbmd</ci>
+                    <apply>
+                        <power/>
+                        <ci>Qgxb</ci>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <ci>TmpC</ci>
+                                <cn cellml:units="celsius">37</cn>
+                            </apply>
+                            <cn cellml:units="celsius">10</cn>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="regulation_and_crossbridge_cycling_state_equations">
+        <variable initial_value="0.0001" name="XBpostr" private_interface="out" public_interface="out" units="dimensionless"/> <!-- trying to get rid of oscillations by adjusting initial conditions. the original value (29-11-2016) is: 1.81017564383744e-6 -->
+        <variable initial_value="0.0001" name="XBprer" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable name="dXBpostr" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="dXBprer" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha1_plus" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha2_plus" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha3_plus" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha1_minus" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha2_minus" public_interface="out" units="first_order_rate_constant"/>
+        <variable name="alpha3_minus" public_interface="out" units="first_order_rate_constant"/>
+        <variable initial_value="16736e6" name="kMgATP" public_interface="out" units="micromolar2"/>
+        <variable initial_value="0.004" name="kdADP" public_interface="out" units="micromolar"/>
+        <variable initial_value="2e3" name="xPi_cons" public_interface="out" units="micromolar"/>
+        <variable initial_value="5e3" name="MgATP_cons" public_interface="out" units="micromolar"/>
+        <variable name="fxbT" units="first_order_rate_constant" private_interface="out" public_interface="out"/>
+        <variable initial_value="0.9997" name="N_NoXB" units="dimensionless"/>
+        <variable initial_value="0" name="P_NoXB" units="dimensionless"/>
+        <variable name="P" units="dimensionless" public_interface="out" private_interface="out"/>
+        <variable initial_value="0.9997" name="N" units="dimensionless" private_interface="out" public_interface="out"/>
+        <variable initial_value="36" name="MgADP_cons" units="micromolar"/>
+        <variable initial_value="2e3" name="xPi" units="micromolar"/>
+        <variable initial_value="5e3" name="MgATP" units="micromolar"/>
+        <variable initial_value="36.3" name="MgADP" units="micromolar"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="fappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hfT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gxbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="kn_pT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="kp_nT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="H" public_interface="in" units="micromolar"/>
+        <variable name="H_cons" public_interface="in" units="micromolar"/>
+        <variable name="ATP_consumption_rate" public_interface="out" private_interface="out" units="first_order_rate_constant"/>
+        <variable name="SOVFThick" public_interface="in" units="dimensionless"/>
+        <variable name="dP" initial_value="0" units="first_order_rate_constant"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>ATP_consumption_rate</ci>
+                <apply>
+                    <times/>
+                    <ci>SOVFThick</ci>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>XBpostr</ci>
+                            <ci>alpha3_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>P</ci>
+                            <ci>alpha3_minus</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>N_NoXB</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>kp_nT</ci>
+                        <ci>P_NoXB</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>kn_pT</ci>
+                        <ci>N_NoXB</ci>
+                    </apply>
+                </apply>
+            </apply>
+            
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>P_NoXB</ci>
+                </apply>
+                
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>kn_pT</ci>
+                        <ci>N_NoXB</ci>
+                    </apply>
+                    <apply><times/>
+                        <ci>kp_nT</ci> 
+                    <ci>P_NoXB</ci>
+                    </apply>
+                </apply>
+                     
+            </apply>
+            
+            <apply>
+                <eq/>
+                <ci>P</ci>
+                <apply>
+                    <minus/>
+                    <cn cellml:units="dimensionless">1</cn>
+                    <apply><times/>
+                    <cn cellml:units="dimensionless">1</cn>
+                    <apply>
+                        <plus/>
+                        <ci>N</ci>
+                        <ci>XBprer</ci>
+                        <ci>XBpostr</ci>
+                    </apply>
+                    </apply>
+                </apply>
+            </apply>
+             <!-- <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>P</ci>
+                </apply>
+                <ci>dP</ci>
+            </apply> -->
+            
+            
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>N</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>kp_nT</ci>
+                        <ci>P</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>kn_pT</ci>
+                        <ci>N</ci>
+                    </apply>
+                </apply>
+            </apply>
+            
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>XBprer</ci>
+                </apply>
+                <ci>dXBprer</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dXBprer</ci>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha1_plus</ci>
+                            <ci>P</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_minus</ci>
+                            <ci>XBpostr</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <plus/>
+                            <ci>alpha1_minus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <ci>XBprer</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>XBpostr</ci>
+                </apply>
+                <ci>dXBpostr</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dXBpostr</ci>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>P</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_plus</ci>
+                            <ci>XBprer</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <plus/>
+                            <ci>alpha2_minus</ci>
+                            <ci>alpha3_plus</ci>
+                        </apply>
+                        <ci>XBpostr</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha1_plus</ci>
+                <ci>fappT</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha2_plus</ci>
+                <ci>hfT</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha3_plus</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <ci>MgATP</ci>
+                                <ci>gxbT</ci>
+                            </apply>
+                            <ci>MgATP_cons</ci>
+                        </apply>
+                        <apply>
+                            <plus/>
+                            <ci>kdADP</ci>
+                            <ci>MgADP_cons</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <ci>kdADP</ci>
+                        <ci>MgADP</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha1_minus</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>xPi</ci>
+                        <ci>gappT</ci>
+                    </apply>
+                    <ci>xPi_cons</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha2_minus</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <divide/>
+                                    <apply>
+                                        <times/>
+                                        <ci>H</ci>
+                                        <ci>hbT</ci>
+                                    </apply>
+                                    <ci>H_cons</ci>
+                                </apply>
+                                <apply>
+                                    <plus/>
+                                    <ci>kdADP</ci>
+                                    <ci>MgADP_cons</ci>
+                                </apply>
+                            </apply>
+                            <ci>MgADP_cons</ci>
+                        </apply>
+                        <ci>MgADP</ci>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <ci>kdADP</ci>
+                        <ci>MgADP</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>alpha3_minus</ci>
+                <ci>fxbT</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>fxbT</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <times/>
+                            <ci>kdADP</ci>
+                            <ci>fappT</ci>
+                            <ci>hfT</ci>
+                            <ci>gxbT</ci>
+                        </apply>
+                        <ci>MgATP_cons</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <divide/>
+                                    <ci>gappT</ci>
+                                    <ci>xPi_cons</ci>
+                                </apply>
+                                <ci>hbT</ci>
+                            </apply>
+                            <ci>H_cons</ci>
+                        </apply>
+                        <ci>kMgATP</ci>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="mean_strain_of_strongly_bound_states">
+        <variable initial_value="0.00700005394873882" name="xXBpostr" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="2.22e-17" name="xXBprer" private_interface="out" public_interface="out" units="micrometre"/> <!-- changing initial values to get rid of oscillation (value as of 29/11/16 3.41212828972468e-8 -->
+        <variable name="dxXBpostr" public_interface="out" units="micrometre_per_millisecond"/>
+        <variable name="dxXBprer" public_interface="out" units="micrometre_per_millisecond"/>
+        <variable initial_value="2" name="xPsi" units="dimensionless"/>
+        <variable name="dutyprer" units="dimensionless"/>
+        <variable name="dutypostr" units="dimensionless"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="alpha1_plus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="alpha2_plus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="alpha3_plus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="alpha1_minus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="alpha2_minus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="alpha3_minus" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="dSL" public_interface="in" units="micrometre_per_millisecond"/>
+        <variable name="x_0" public_interface="in" units="micrometre"/>
+        <variable name="fappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hfT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gxbT" public_interface="in" units="first_order_rate_constant"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>xXBprer</ci>
+                </apply>
+                <ci>dxXBprer</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dxXBprer</ci>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                        <times/>
+                        <cn cellml:units="dimensionless">1</cn>
+                        <ci>dSL</ci>
+                        </apply>
+                        <cn cellml:units="dimensionless">2</cn>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <ci>xPsi</ci>
+                            <ci>dutyprer</ci>
+                        </apply>
+                        <apply>
+                            <plus/>
+                            
+                            <apply>
+                                <minus/>
+                                
+                            <apply>
+                                <times/>
+                                <ci>alpha2_minus</ci>
+                                <apply>
+                                    <minus/>
+                                    
+                                    <apply>
+                                        <minus/> <!-- this originally was plus in the code-->
+                                        <ci>xXBpostr</ci>
+                                        <ci>x_0</ci>
+                                        
+                                    </apply>
+                                    <ci>xXBprer</ci>
+                                </apply>
+                            </apply> 
+ 
+                            <apply>
+                                <times/>
+                                <ci>alpha1_plus</ci>
+                                <ci>xXBprer</ci>
+                            </apply>
+                            </apply>
+                            
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>xXBpostr</ci>
+                </apply>
+                <ci>dxXBpostr</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dxXBpostr</ci>
+                 
+                <apply>
+                    <plus/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                        <times/>
+                        <cn cellml:units="dimensionless">1</cn>
+                        <ci>dSL</ci>
+                        </apply>
+                        <cn cellml:units="dimensionless">2</cn>
+                    </apply>
+                    
+                    <apply>
+                    <times/>
+                        <apply>
+                            <divide/>
+                            <ci>xPsi</ci>
+                            <ci>dutypostr</ci>
+                        </apply>
+                    
+                      <apply>
+                      <times/>
+                        <ci>alpha2_plus</ci>
+                        
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <plus/>
+                                <ci>xXBprer</ci>
+                                <ci>x_0</ci>
+                            </apply>
+                            <ci>xXBpostr</ci>
+                        </apply>
+                      </apply> <!-- end times -->
+                        
+                    </apply> <!-- times keep -->
+                </apply> <!-- end of plus -->
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dutyprer</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_plus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_minus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha1_plus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_plus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_minus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_plus</ci>
+                            <ci>alpha3_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_plus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dutypostr</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha1_plus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>alpha1_plus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha2_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_plus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_minus</ci>
+                            <ci>alpha1_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha2_plus</ci>
+                            <ci>alpha3_plus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_minus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>alpha3_plus</ci>
+                            <ci>alpha1_minus</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="normalised_active_and_passive_force">
+        <variable name="SSXBpostr" public_interface="out" units="dimensionless"/>
+        <variable name="SSXBprer" public_interface="out" units="dimensionless"/>
+        <variable name="dSL" private_interface="out" public_interface="out" units="micrometre_per_millisecond"/>
+        <variable name="SL" initial_value="2.3" public_interface="out" units="micrometre"/> 
+        <variable name="lambda" public_interface="in" units="dimensionless"/>
+        <variable name="lambda_dot" public_interface="in" units="per_millisecond"/>
+        <variable name="velocitySF" public_interface="in" units="dimensionless"/>
+        <variable name="quickRelease_onOff" initial_value="1" units="dimensionless"/>
+        <variable name="VelocitySwitch" public_interface="in" units="dimensionless"/>
+        <variable initial_value="2.3" name="SL_computed_diff" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="1" name="x_area" public_interface="out" units="dimensionless"/>
+        <variable name="active_tension" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable initial_value="1" name="kxb" units="millinewton_per_millimetre2"/>
+        <variable name="Fnordv" units="millinewton_micrometre_per_millimetre2"/>
+        <variable name="force" public_interface="out" units="millinewton_micrometre_per_millimetre2"/>
+        <variable name="active" public_interface="out" units="unit_normalised_force"/>
+        <variable name="preload" private_interface="out" public_interface="out" units="unit_normalised_force"/>
+        <variable name="passive" private_interface="out" public_interface="out" units="unit_normalised_force"/>
+        <variable name="F_collagen" units="unit_normalised_force"/>
+        <variable name="F_titin" units="unit_normalised_force"/>
+        <variable initial_value="0" name="afterload" private_interface="out" public_interface="out" units="unit_normalised_force"/>
+        <variable initial_value="2.25" name="SL_c" units="micrometre"/>
+        <variable name="SLrest" public_interface="in" units="micrometre"/>
+        <variable public_interface="in" name="SLset" units="micrometre"/>
+        <variable initial_value="0.002" name="PCon_t" units="unit_normalised_force"/>
+        <variable initial_value="10" name="PExp_t" units="per_micrometre"/>
+        <variable initial_value="0.02" name="PCon_c" units="unit_normalised_force"/>
+        <variable initial_value="70" name="PExp_c" units="per_micrometre"/>
+        <variable initial_value="50" name="KSE" units="unit_normalised_force_per_micrometre"/>
+        <variable name="fxb" units="first_order_rate_constant"/>
+        <variable name="fxbT" units="first_order_rate_constant" public_interface="in"/>
+        <variable name="P" units="dimensionless" public_interface="in"/>
+        <variable name="MgATP_cons" public_interface="in" units="micromolar"/>
+        <variable name="xPi_cons" public_interface="in" units="micromolar"/>
+        <variable name="H_cons" public_interface="in" units="micromolar"/>
+        <variable name="kMgATP" public_interface="in" units="micromolar2"/>
+        <variable name="kdADP" public_interface="in" units="micromolar"/>
+        <variable name="x_0" public_interface="in" units="micrometre"/>
+        <variable name="fapp" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gapp" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hf" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hb" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gxb" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="fappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gappT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hfT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="hbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="gxbT" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="XBpostr" public_interface="in" units="dimensionless"/>
+        <variable name="XBprer" public_interface="in" units="dimensionless"/>
+        <variable name="xXBpostr" public_interface="in" units="micrometre"/>
+        <variable name="xXBprer" public_interface="in" units="micrometre"/>
+        <variable name="SOVFThick" public_interface="in" units="dimensionless"/>
+        <variable initial_value="0" name="SEon" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable name="lambdaC" public_interface="out" units="dimensionless"/>
+        <variable name="lambdaDotC" public_interface="out" units="per_millisecond"/>
+        <variable initial_value="0" name="integral_force" private_interface="out" public_interface="out" units="unit_normalised_force_millisecond"/>
+        <variable name="F_total" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.003" name="viscosity" units="unit_normalised_force_millisecond_per_micrometre"/> <!-- 0.4 prevents oscillation but 0.3 is from RICE-->
+        <variable initial_value="50" name="mass" public_interface="out" private_interface="out" units="unit_normalised_force_millisecond2_per_micrometre"/> <!-- was 0.005 -->
+        <variable name="XB_cycling" public_interface="out" private_interface="out" units="first_order_rate_constant"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>XB_cycling</ci>
+                <apply>
+                    <times/>
+                    <cn cellml:units="dimensionless">1000</cn>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>gxbT</ci>
+                            <ci>XBpostr</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxbT</ci>
+                            <ci>P</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>lambdaC</ci>
+                <ci>lambda</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>lambdaDotC</ci>
+                <ci>lambda_dot</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>fxb</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <times/>
+                            <ci>kdADP</ci>
+                            <ci>fapp</ci>
+                            <ci>hf</ci>
+                            <ci>gxb</ci>
+                        </apply>
+                        <ci>MgATP_cons</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <divide/>
+                                    <ci>gapp</ci>
+                                    <ci>xPi_cons</ci>
+                                </apply>
+                                <ci>hb</ci>
+                            </apply>
+                            <ci>H_cons</ci>
+                        </apply>
+                        <ci>kMgATP</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>SSXBprer</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>gxb</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>hbT</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>hf</ci>
+                            <ci>gxb</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>hb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>gxb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>gxb</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>hb</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fapp</ci>
+                            <ci>hf</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>SSXBpostr</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>fapp</ci>
+                            <ci>hf</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>hf</ci>
+                            <ci>gxb</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>hb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>gxb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>gxb</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>hb</ci>
+                            <ci>fapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>gapp</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fapp</ci>
+                            <ci>hf</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>fxb</ci>
+                            <ci>hb</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Fnordv</ci>
+                <apply>
+                    <times/>
+                    <ci>kxb</ci>
+                    <ci>x_0</ci>
+                    <ci>SSXBpostr</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>force</ci>
+                <apply>
+                    <times/>
+                    <ci>kxb</ci>
+                    <ci>SOVFThick</ci>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>xXBpostr</ci>
+                            <ci>XBpostr</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>xXBprer</ci>
+                            <ci>XBprer</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>active</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <cn cellml:units="unit_normalised_force">1</cn>
+                        <ci>force</ci>
+                    </apply>
+                    <ci>Fnordv</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>active_tension</ci>
+                <apply>
+                    <divide/>
+                    <ci>force</ci>
+                    <ci>x_area</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>preload</ci>
+                <apply>
+                    <times/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <abs/>
+                            <apply>
+                                <minus/>
+                                <ci>SLset</ci>
+                                <ci>SLrest</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <minus/>
+                            <ci>SLset</ci>
+                            <ci>SLrest</ci>
+                        </apply>
+                    </apply>
+                    <ci>PCon_t</ci>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <times/>
+                                <ci>PExp_t</ci>
+                                <apply>
+                                    <abs/>
+                                    <apply>
+                                        <minus/>
+                                        <ci>SLset</ci>
+                                        <ci>SLrest</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <cn cellml:units="dimensionless">1</cn>
+                    </apply>
+                </apply>
+            </apply>
+            
+            <apply>
+                <eq/>
+                <ci>F_collagen</ci>
+                <piecewise>
+                <piece>
+                <apply>
+                    <times/>
+                    
+                    <ci>PCon_c</ci>
+                    
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <minus/>
+                            <apply>
+                                <times/>
+                                <ci>PExp_c</ci>
+                                
+                                    <apply>
+                                        <minus/>
+                                        <ci>SL</ci>
+                                        <ci>SL_c</ci>
+                                    </apply>
+                                
+                            </apply>
+                            <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </apply>
+                        
+                    
+                </apply>
+                     
+                    <apply> <geq/>
+                    <ci>SL</ci>
+                    <ci>SL_c</ci>
+                    </apply>
+               </piece>
+                    <otherwise>
+                        <cn cellml:units="unit_normalised_force">0</cn>
+                    </otherwise>
+               </piecewise>
+            </apply>
+            
+             <apply>
+                <eq/>
+                <ci>F_titin</ci>
+                
+                <apply>
+                    <times/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <abs/>
+                            <apply>
+                                <minus/>
+                                <ci>SL</ci>
+                                <ci>SLrest</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <minus/>
+                            <ci>SL</ci>
+                            <ci>SLrest</ci>
+                        </apply>
+                    </apply>
+                    <ci>PCon_t</ci>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <times/>
+                                <ci>PExp_t</ci>
+                                <apply>
+                                    <abs/>
+                                    <apply>
+                                        <minus/>
+                                        <ci>SL</ci>
+                                        <ci>SLrest</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <cn cellml:units="dimensionless">1</cn>
+                    </apply>
+                </apply>      
+            </apply>
+            
+            <!--<apply>
+                <eq/>
+                <ci>F_titin</ci>
+                <apply>
+                    <times/>
+                     <apply>
+                        <divide/>
+                        <apply>
+                            <abs/>
+                            <apply>
+                                <minus/>
+                                <ci>SL</ci>
+                                <ci>SLrest</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <minus/>
+                            <ci>SL</ci>
+                            <ci>SLrest</ci>
+                        </apply>
+                    </apply>
+                    <ci>PCon_t</ci>
+                    
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <minus/>
+                            <apply>
+                                <times/>
+                                <ci>PExp_t</ci>
+                                
+                                    <apply>
+                                    <abs/>
+                                    <apply>
+                                        <minus/>
+                                        <ci>SL</ci>
+                                        <ci>SLrest</ci>
+                                    </apply>
+                                </apply>
+                                
+                            </apply>
+                            <cn cellml:units="dimensionless">1</cn>
+                            </apply>
+                        </apply>
+                        
+                    
+                </apply>
+                </apply> -->
+            
+            
+            <apply>
+                <eq/>
+                <ci>passive</ci>
+                 
+                <ci>F_titin</ci> 
+                
+            </apply>
+            
+            <apply>
+                <eq/>
+                <ci>F_total</ci>
+                <apply>
+                <plus/> 
+                <ci>active</ci> 
+                <ci>passive</ci> 
+                </apply>
+            </apply>
+            
+            
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>integral_force</ci>
+                </apply>
+                <piecewise>
+                    <piece>
+                        
+                            <apply>
+                                <plus/>
+                                <ci>afterload</ci>
+                                <!-- <ci>preload</ci> -->
+                                
+                                <apply> <minus/> <ci>F_total</ci> </apply>
+                            </apply>   
+                        
+                        
+                        
+                        <apply>
+                            <eq/>
+                            <ci>SEon</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                    
+                    
+                    <piece>
+                        <cn cellml:units="dimensionless">0.02</cn>
+                         <apply>
+                            <and/>
+                            <apply>
+                                <eq/>
+                                <ci>SEon</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                            <apply>
+                                <lt/>
+                                <ci>integral_force</ci>
+                                <cn cellml:units="dimensionless">0</cn>
+                            </apply>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                           <cn cellml:units="dimensionless">0</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>SL_computed_diff</ci>
+                </apply>
+                <apply>
+                    <times/>
+                    <ci>lambda_dot</ci>
+                    <ci>SLrest</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dSL</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <plus/>
+                                <ci>integral_force</ci>
+                                <apply>
+                                    <times/>
+                                    <ci>viscosity</ci>
+                                    <apply>
+                                        <minus/>
+                                        <ci>SLrest</ci>
+                                        <ci>SL</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <ci>mass</ci>
+                        </apply>
+                        <apply>
+                            <eq/>
+                            <ci>SEon</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                          <cn cellml:units="dimensionless">0.002</cn>                    
+                        <apply>
+                            <eq/>
+                            <ci>SEon</ci>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                        <times/>
+                            <ci>lambda_dot</ci>
+                            <ci>SLrest</ci>
+                            <ci>velocitySF</ci>
+                        </apply>
+                       <apply>
+                            <eq/>
+                            <ci>quickRelease_onOff</ci>
+                            <cn cellml:units="dimensionless">1</cn>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="unit_normalised_force">0</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>SL</ci>
+                </apply>
+                <ci>dSL</ci>
+            </apply>
+        </math>
+    </component>
+    <component name="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding">
+        <variable name="FrSBXB" units="dimensionless"/>
+        <variable name="dFrSBXB" units="first_order_rate_constant"/>
+        <variable name="dsovr_ze" units="micrometre_per_millisecond"/>
+        <variable name="dsovr_cle" units="micrometre_per_millisecond"/>
+        <variable name="dlen_sovr" units="micrometre_per_millisecond"/>
+        <variable name="dSOVFThick" units="first_order_rate_constant"/>
+        <variable name="dSOVFThin" units="first_order_rate_constant"/>
+        <variable initial_value="1" name="kxb" public_interface="out" units="millinewton_per_millimetre2"/>
+        <variable name="dforce" units="millinewton_micrometre_per_millimetre2_per_millisecond"/>
+        <variable initial_value="70" name="Trop_conc" units="micromolar"/>
+        <variable name="TropTot" public_interface="out" units="micromolar"/>
+        <variable name="dTropTot" private_interface="out" public_interface="out" units="micromolar_per_millisecond"/>
+        <variable name="dSL" public_interface="in" units="micrometre_per_millisecond"/>
+        <variable name="SL" public_interface="in" units="micrometre"/>
+        <variable name="dXBpostr" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="dXBprer" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="dxXBpostr" public_interface="in" units="micrometre_per_millisecond"/>
+        <variable name="dxXBprer" public_interface="in" units="micrometre_per_millisecond"/>
+        <variable name="XBpostr" public_interface="in" units="dimensionless"/>
+        <variable name="XBprer" public_interface="in" units="dimensionless"/>
+        <variable name="xXBpostr" public_interface="in" units="micrometre"/>
+        <variable name="xXBprer" public_interface="in" units="micrometre"/>
+        <variable name="SSXBpostr" public_interface="in" units="dimensionless"/>
+        <variable name="SSXBprer" public_interface="in" units="dimensionless"/>
+        <variable name="SOVFThick" public_interface="in" units="dimensionless"/>
+        <variable name="SOVFThin" public_interface="in" units="dimensionless"/>
+        <variable name="len_thin" public_interface="in" units="micrometre"/>
+        <variable name="len_thick" public_interface="in" units="micrometre"/>
+        <variable name="len_hbare" public_interface="in" units="micrometre"/>
+        <variable name="TRPNCaL" public_interface="in" units="dimensionless"/>
+        <variable name="TRPNCaH" public_interface="in" units="dimensionless"/>
+        <variable name="dTRPNCaL" public_interface="in" units="first_order_rate_constant"/>
+        <variable name="dTRPNCaH" public_interface="in" units="first_order_rate_constant"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>FrSBXB</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <ci>XBpostr</ci>
+                        <ci>XBprer</ci>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <ci>SSXBpostr</ci>
+                        <ci>SSXBprer</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dFrSBXB</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <plus/>
+                        <ci>dXBpostr</ci>
+                        <ci>dXBprer</ci>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <ci>SSXBpostr</ci>
+                        <ci>SSXBprer</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dsovr_ze</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">0.5</cn>
+                            </apply>
+                            <ci>dSL</ci>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>SL</ci>
+                            <ci>len_thick</ci>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="micrometre_per_millisecond">0</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dsovr_cle</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">0.5</cn>
+                            </apply>
+                            <ci>dSL</ci>
+                        </apply>
+                        <apply>
+                            <gt/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <times/>
+                                    <cn cellml:units="dimensionless">2</cn>
+                                    <ci>len_thin</ci>
+                                </apply>
+                                <ci>SL</ci>
+                            </apply>
+                            <ci>len_hbare</ci>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="micrometre_per_millisecond">0</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dlen_sovr</ci>
+                <apply>
+                    <minus/>
+                    <ci>dsovr_ze</ci>
+                    <ci>dsovr_cle</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dSOVFThin</ci>
+                <apply>
+                    <divide/>
+                    <ci>dlen_sovr</ci>
+                    <ci>len_thin</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dSOVFThick</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <cn cellml:units="dimensionless">2</cn>
+                        <ci>dlen_sovr</ci>
+                    </apply>
+                    <apply>
+                        <minus/>
+                        <ci>len_thick</ci>
+                        <ci>len_hbare</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>TropTot</ci>
+                <apply>
+                    <times/>
+                    <ci>Trop_conc</ci>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>TRPNCaL</ci>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">1</cn>
+                                <ci>SOVFThin</ci>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>SOVFThin</ci>
+                            <apply>
+                                <plus/>
+                                <apply>
+                                    <times/>
+                                    <ci>FrSBXB</ci>
+                                    <ci>TRPNCaH</ci>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <ci>TRPNCaL</ci>
+                                    <apply>
+                                        <minus/>
+                                        <cn cellml:units="dimensionless">1</cn>
+                                        <ci>FrSBXB</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dTropTot</ci>
+                <apply>
+                    <times/>
+                    <ci>Trop_conc</ci>
+                    <apply>
+                        <plus/>
+                        
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>dSOVFThin</ci>
+                            </apply>
+                            <ci>TRPNCaL</ci>
+                        </apply>
+                        
+                        <apply>
+                            <times/>
+                            <ci>dTRPNCaL</ci>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">1</cn>
+                                <ci>SOVFThin</ci>
+                            </apply>
+                        </apply>
+                        
+                        <apply>
+                            <times/>
+                            <ci>dSOVFThin</ci>
+                            <apply>
+                                <plus/>
+                                <apply>
+                                    <times/>
+                                    <ci>FrSBXB</ci>
+                                    <ci>TRPNCaH</ci>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <ci>TRPNCaL</ci>
+                                    <apply>
+                                        <minus/>
+                                        <cn cellml:units="dimensionless">1</cn>
+                                        <ci>FrSBXB</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>SOVFThin</ci>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <times/>
+                                        <ci>dFrSBXB</ci>
+                                        <ci>TRPNCaH</ci>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <ci>FrSBXB</ci>
+                                        <ci>dTRPNCaH</ci>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <ci>dTRPNCaL</ci>
+                                        <apply>
+                                            <minus/>
+                                            <cn cellml:units="dimensionless">1</cn>
+                                            <ci>FrSBXB</ci>
+                                        </apply>
+                                    </apply>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <ci>dFrSBXB</ci>
+                                    <ci>TRPNCaL</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dforce</ci>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <ci>kxb</ci>
+                        <ci>dSOVFThick</ci>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <times/>
+                                <ci>xXBpostr</ci>
+                                <ci>XBpostr</ci>
+                            </apply>
+                            <apply>
+                                <times/>
+                                <ci>xXBprer</ci>
+                                <ci>XBprer</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>kxb</ci>
+                        <ci>SOVFThick</ci>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <times/>
+                                <ci>dxXBpostr</ci>
+                                <ci>XBpostr</ci>
+                            </apply>
+                            <apply>
+                                <times/>
+                                <ci>xXBpostr</ci>
+                                <ci>dXBpostr</ci>
+                            </apply>
+                            <apply>
+                                <times/>
+                                <ci>dxXBprer</ci>
+                                <ci>XBprer</ci>
+                            </apply>
+                            <apply>
+                                <times/>
+                                <ci>xXBprer</ci>
+                                <ci>dXBprer</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="model_parameters">
+        <variable initial_value="1.2" name="len_thin" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="1.65" name="len_thick" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="0.1" name="len_hbare" private_interface="out" public_interface="out" units="micrometre"/>
+        <!-- <variable name="TmpC" units="celsius" initial_value="22" public_interface="out"/>
+      <variable name="x_0" units="micrometre" initial_value="0.007" public_interface="out"/> -->
+    </component>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="interface"/>
+        <map_variables variable_1="dTropTot" variable_2="dTropTot"/>
+    </connection>
+    <connection>
+        <map_components component_1="thin_filament_regulation_and_crossbridge_cycling_rates" component_2="interface"/>
+        <!-- added connection-->
+        <map_variables variable_1="x_0" variable_2="x_0"/>
+        <map_variables variable_1="TmpC" variable_2="TmpC"/>
+        <map_variables variable_1="xbmodsp" variable_2="xbmodsp"/>
+        <map_variables variable_1="hfT" variable_2="hfT"/>
+        <map_variables variable_1="gxbT" variable_2="gxbT"/>
+        <map_variables variable_1="hbT" variable_2="hbT"/>
+        <map_variables variable_1="gappT" variable_2="gappT"/>
+        <map_variables variable_1="fappT" variable_2="fappT"/>
+    </connection>
+    <connection>
+        <map_components component_1="Ca_binding_to_troponin_to_thin_filament_regulation" component_2="interface"/>
+        <!-- added connection-->
+        <map_variables variable_1="TmpC" variable_2="TmpC"/>
+        <map_variables variable_1="time" variable_2="time"/>
+        <map_variables variable_1="Ca_i" variable_2="Ca_i"/>
+        <map_variables variable_1="kn_pT" variable_2="kn_pT"/>
+        <map_variables variable_1="kp_nT" variable_2="kp_nT"/>
+    </connection>
+    <connection>
+        <map_components component_1="mean_strain_of_strongly_bound_states" component_2="interface"/>
+        <!-- added connection-->
+        <map_variables variable_1="x_0" variable_2="x_0"/>
+        <map_variables variable_1="time" variable_2="time"/>
+        <map_variables variable_1="xXBpostr" variable_2="xXBpostr"/>
+        <map_variables variable_1="xXBprer" variable_2="xXBprer"/>
+    </connection>
+    <connection>
+        <map_components component_1="normalised_active_and_passive_force" component_2="interface"/>
+        <!-- added connection-->
+        <map_variables variable_1="x_0" variable_2="x_0"/>
+        <map_variables variable_1="lambda" variable_2="lambda"/>
+        <map_variables variable_1="lambda_dot" variable_2="lambda_dot"/>
+        <map_variables variable_1="velocitySF" variable_2="velocitySF"/>
+        <map_variables variable_1="VelocitySwitch" variable_2="VelocitySwitch"/>
+        <map_variables variable_1="SLrest" variable_2="SLrest"/>
+        <map_variables variable_1="SLset" variable_2="SLset"/>
+        <map_variables variable_1="time" variable_2="time"/>
+        <map_variables variable_1="active_tension" variable_2="active_tension"/>
+        <map_variables variable_1="SL" variable_2="SL"/>
+        <map_variables variable_1="afterload" variable_2="afterload"/>
+        <map_variables variable_1="preload" variable_2="preload"/>
+        <map_variables variable_1="passive" variable_2="passive"/>
+        <map_variables variable_1="integral_force" variable_2="integral_force"/>
+        <map_variables variable_1="F_total" variable_2="F_total"/>
+        <map_variables variable_1="SEon" variable_2="SEon"/>
+        <map_variables variable_1="mass" variable_2="mass"/>
+        <map_variables variable_1="XB_cycling" variable_2="XB_cycling"/>
+        <map_variables variable_1="dSL" variable_2="dSL"/>
+    </connection>
+    <connection>
+        <map_components component_1="regulation_and_crossbridge_cycling_state_equations" component_2="sarcomere_geometry"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+    </connection>
+    <connection>
+        <map_components component_1="regulation_and_crossbridge_cycling_state_equations" component_2="interface"/>
+        <map_variables variable_1="time" variable_2="time"/>
+        <map_variables variable_1="ATP_consumption_rate" variable_2="ATP_consumption_rate"/>
+        <map_variables variable_1="XBpostr" variable_2="XBpostr"/>
+        <map_variables variable_1="XBprer" variable_2="XBprer"/>
+        <map_variables variable_1="fxbT" variable_2="fxbT"/>
+        <map_variables variable_1="P" variable_2="P"/>
+        <map_variables variable_1="N" variable_2="N"/>
+    </connection>
+    <connection>
+        <map_components component_1="sarcomere_geometry" component_2="normalised_active_and_passive_force"/>
+        <map_variables variable_1="SL" variable_2="SL"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+        <map_variables variable_1="SEon" variable_2="SEon"/>
+    </connection>
+    <connection>
+        <map_components component_1="sarcomere_geometry" component_2="model_parameters"/>
+        <map_variables variable_1="len_thin" variable_2="len_thin"/>
+        <map_variables variable_1="len_thick" variable_2="len_thick"/>
+        <map_variables variable_1="len_hbare" variable_2="len_hbare"/>
+    </connection>
+    <connection>
+        <map_components component_1="sarcomere_geometry" component_2="interface"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+        <map_variables variable_1="SOVFThin" variable_2="SOVFThin"/>
+    </connection>
+    <connection>
+        <map_components component_1="Ca_binding_to_troponin_to_thin_filament_regulation" component_2="sarcomere_geometry"/>
+        <map_variables variable_1="SOVFThin" variable_2="SOVFThin"/>
+    </connection>
+    <connection>
+        <map_components component_1="thin_filament_regulation_and_crossbridge_cycling_rates" component_2="sarcomere_geometry"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+    </connection>
+    <connection>
+        <map_components component_1="thin_filament_regulation_and_crossbridge_cycling_rates" component_2="mean_strain_of_strongly_bound_states"/>
+        <map_variables variable_1="xXBpostr" variable_2="xXBpostr"/>
+        <map_variables variable_1="xXBprer" variable_2="xXBprer"/>
+        <map_variables variable_1="fappT" variable_2="fappT"/>
+        <map_variables variable_1="gappT" variable_2="gappT"/>
+        <map_variables variable_1="hfT" variable_2="hfT"/>
+        <map_variables variable_1="hbT" variable_2="hbT"/>
+        <map_variables variable_1="gxbT" variable_2="gxbT"/>
+    </connection>
+    <connection>
+        <map_components component_1="regulation_and_crossbridge_cycling_state_equations" component_2="thin_filament_regulation_and_crossbridge_cycling_rates"/>
+        <map_variables variable_1="fappT" variable_2="fappT"/>
+        <map_variables variable_1="gappT" variable_2="gappT"/>
+        <map_variables variable_1="hfT" variable_2="hfT"/>
+        <map_variables variable_1="hbT" variable_2="hbT"/>
+        <map_variables variable_1="gxbT" variable_2="gxbT"/>
+    </connection>
+    <connection>
+        <map_components component_1="regulation_and_crossbridge_cycling_state_equations" component_2="Ca_binding_to_troponin_to_thin_filament_regulation"/>
+        <map_variables variable_1="kn_pT" variable_2="kn_pT"/>
+        <map_variables variable_1="kp_nT" variable_2="kp_nT"/>
+        <map_variables variable_1="H" variable_2="H"/>
+        <map_variables variable_1="H_cons" variable_2="H_cons"/>
+    </connection>
+    <!--<connection>
+      <map_components component_1="mean_strain_of_strongly_bound_states" component_2="model_parameters"/>
+      <map_variables variable_1="x_0" variable_2="x_0"/>
+   </connection> -->
+    <connection>
+        <map_components component_1="normalised_active_and_passive_force" component_2="thin_filament_regulation_and_crossbridge_cycling_rates"/>
+        <map_variables variable_1="fapp" variable_2="fapp"/>
+        <map_variables variable_1="gapp" variable_2="gapp"/>
+        <map_variables variable_1="hf" variable_2="hf"/>
+        <map_variables variable_1="hb" variable_2="hb"/>
+        <map_variables variable_1="gxb" variable_2="gxb"/>
+        <map_variables variable_1="fappT" variable_2="fappT"/>
+        <map_variables variable_1="gappT" variable_2="gappT"/>
+        <map_variables variable_1="hfT" variable_2="hfT"/>
+        <map_variables variable_1="hbT" variable_2="hbT"/>
+        <map_variables variable_1="gxbT" variable_2="gxbT"/>
+    </connection>
+    <connection>
+        <map_components component_1="normalised_active_and_passive_force" component_2="regulation_and_crossbridge_cycling_state_equations"/>
+        <map_variables variable_1="XBpostr" variable_2="XBpostr"/>
+        <map_variables variable_1="XBprer" variable_2="XBprer"/>
+        <map_variables variable_1="kMgATP" variable_2="kMgATP"/>
+        <map_variables variable_1="kdADP" variable_2="kdADP"/>
+        <map_variables variable_1="xPi_cons" variable_2="xPi_cons"/>
+        <map_variables variable_1="MgATP_cons" variable_2="MgATP_cons"/>
+        <map_variables variable_1="P" variable_2="P"/>
+        <map_variables variable_1="fxbT" variable_2="fxbT"/>
+    </connection>
+    <connection>
+        <map_components component_1="normalised_active_and_passive_force" component_2="mean_strain_of_strongly_bound_states"/>
+        <map_variables variable_1="xXBpostr" variable_2="xXBpostr"/>
+        <map_variables variable_1="xXBprer" variable_2="xXBprer"/>
+        <map_variables variable_1="dSL" variable_2="dSL"/>
+    </connection>
+    <connection>
+        <map_components component_1="normalised_active_and_passive_force" component_2="Ca_binding_to_troponin_to_thin_filament_regulation"/>
+        <map_variables variable_1="H_cons" variable_2="H_cons"/>
+    </connection>
+    <!--<connection>
+      <map_components component_1="normalised_active_and_passive_force" component_2="model_parameters"/>
+      <map_variables variable_1="x_0" variable_2="x_0"/>
+   </connection> -->
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="model_parameters"/>
+        <map_variables variable_1="len_thin" variable_2="len_thin"/>
+        <map_variables variable_1="len_thick" variable_2="len_thick"/>
+        <map_variables variable_1="len_hbare" variable_2="len_hbare"/>
+    </connection>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="Ca_binding_to_troponin_to_thin_filament_regulation"/>
+        <map_variables variable_1="TRPNCaL" variable_2="TRPNCaL"/>
+        <map_variables variable_1="TRPNCaH" variable_2="TRPNCaH"/>
+        <map_variables variable_1="dTRPNCaL" variable_2="dTRPNCaL"/>
+        <map_variables variable_1="dTRPNCaH" variable_2="dTRPNCaH"/>
+    </connection>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="regulation_and_crossbridge_cycling_state_equations"/>
+        <map_variables variable_1="XBpostr" variable_2="XBpostr"/>
+        <map_variables variable_1="XBprer" variable_2="XBprer"/>
+        <map_variables variable_1="dXBpostr" variable_2="dXBpostr"/>
+        <map_variables variable_1="dXBprer" variable_2="dXBprer"/>
+    </connection>
+    <connection>
+        <map_components component_1="regulation_and_crossbridge_cycling_state_equations" component_2="mean_strain_of_strongly_bound_states"/>
+        <map_variables variable_1="alpha1_plus" variable_2="alpha1_plus"/>
+        <map_variables variable_1="alpha2_plus" variable_2="alpha2_plus"/>
+        <map_variables variable_1="alpha3_plus" variable_2="alpha3_plus"/>
+        <map_variables variable_1="alpha1_minus" variable_2="alpha1_minus"/>
+        <map_variables variable_1="alpha2_minus" variable_2="alpha2_minus"/>
+        <map_variables variable_1="alpha3_minus" variable_2="alpha3_minus"/>
+    </connection>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="mean_strain_of_strongly_bound_states"/>
+        <map_variables variable_1="xXBpostr" variable_2="xXBpostr"/>
+        <map_variables variable_1="xXBprer" variable_2="xXBprer"/>
+        <map_variables variable_1="dxXBpostr" variable_2="dxXBpostr"/>
+        <map_variables variable_1="dxXBprer" variable_2="dxXBprer"/>
+    </connection>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="normalised_active_and_passive_force"/>
+        <map_variables variable_1="SSXBpostr" variable_2="SSXBpostr"/>
+        <map_variables variable_1="SSXBprer" variable_2="SSXBprer"/>
+        <map_variables variable_1="SL" variable_2="SL"/>
+        <map_variables variable_1="dSL" variable_2="dSL"/>
+    </connection>
+    <connection>
+        <map_components component_1="calculation_of_micromolar_per_millisecondes_of_Ca_for_apparent_Ca_binding" component_2="sarcomere_geometry"/>
+        <map_variables variable_1="SOVFThin" variable_2="SOVFThin"/>
+        <map_variables variable_1="SOVFThick" variable_2="SOVFThick"/>
+    </connection>
+</model>
