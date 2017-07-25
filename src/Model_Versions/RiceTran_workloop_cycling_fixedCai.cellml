@@ -119,7 +119,7 @@
         <variable name="active_tension" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="preload" private_interface="in" public_interface="out" units="unit_normalised_force"/>
         <variable name="passive" private_interface="in" public_interface="out" units="unit_normalised_force"/>
-        <variable initial_value="22.5" name="TmpC" private_interface="out" public_interface="out" units="celsius"/>
+        <variable initial_value="23" name="TmpC" private_interface="out" public_interface="out" units="celsius"/>
         <variable initial_value="0.007" name="x_0" private_interface="out" public_interface="out" units="micrometre"/>
         <variable name="lambda" private_interface="out" public_interface="in" units="dimensionless"/>
         <variable name="lambda_dot" private_interface="out" public_interface="in" units="per_millisecond"/>
@@ -1831,8 +1831,9 @@
         <variable name="lambda" public_interface="in" units="dimensionless"/>
         <variable name="lambda_dot" public_interface="in" units="per_millisecond"/>
         <variable name="velocitySF" public_interface="in" units="dimensionless"/>
+        <variable name="quickRelease_onOff" initial_value="0" units="dimensionless"/>
         <variable name="VelocitySwitch" public_interface="in" units="dimensionless"/>
-        <variable initial_value="2.27" name="SL_computed_diff" private_interface="out" public_interface="out" units="micrometre"/>
+        <variable initial_value="2.3" name="SL_computed_diff" private_interface="out" public_interface="out" units="micrometre"/>
         <variable initial_value="1" name="x_area" public_interface="out" units="dimensionless"/>
         <variable name="active_tension" private_interface="out" public_interface="out" units="dimensionless"/>
         <variable initial_value="1" name="kxb" units="millinewton_per_millimetre2"/>
@@ -2287,14 +2288,10 @@
             <apply>
                 <eq/>
                 <ci>passive</ci>
-                <apply>
-                <plus/> 
-                <ci>F_collagen</ci> 
                 <ci>F_titin</ci> 
-                </apply>
             </apply>
             
-            <!-- <apply>
+            <apply>
                 <eq/>
                 <ci>F_total</ci>
                 <apply>
@@ -2302,13 +2299,13 @@
                 <ci>active</ci> 
                 <ci>passive</ci> 
                 </apply>
-            </apply> -->
+            </apply> 
             
-            <apply>
+            <!-- <apply>
                 <eq/>
                 <ci>F_total</ci>
                 <ci>active</ci> 
-            </apply> 
+            </apply> -->
             
             <apply>
                 <eq/>
@@ -2410,6 +2407,19 @@
                             <eq/>
                             <ci>SEon</ci>
                             <cn cellml:units="dimensionless">2</cn>
+                        </apply>
+                    </piece>
+                     <piece>
+                        <apply>
+                        <times/>
+                            <ci>lambda_dot</ci>
+                            <ci>SLrest</ci>
+                            <ci>velocitySF</ci>
+                        </apply>
+                       <apply>
+                            <eq/>
+                            <ci>quickRelease_onOff</ci>
+                            <cn cellml:units="dimensionless">1</cn>
                         </apply>
                     </piece>
                     <otherwise>

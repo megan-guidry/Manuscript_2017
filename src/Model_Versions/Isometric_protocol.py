@@ -42,9 +42,9 @@ value_afterload = 0.1
 value_stepStart = 400 #ms
 
 stimstop = 1.5
-timeStop = 5000 #ms
+timeStop = 20000 #ms
 stimValue = 1.5
-value_TmpC =  22.5 #Celsius
+value_TmpC =  23 #Celsius
 value_x_0 = 0.007 #micrometre
 value_stimTime = 333 #ms
 # this is used in the integration of the CellML model
@@ -201,7 +201,7 @@ cellML.VariableSetAsKnown(MeganModel, "parameters/afterload")
 
 
 #Below are the variables that we want to get from the CellML model (not entirely sure these are correct)
-cellML.VariableSetAsWanted(MeganModel, "parameters/active_tension")
+cellML.VariableSetAsWanted(MeganModel, "parameters/active")
 cellML.VariableSetAsWanted(MeganModel, "parameters/F_total")
 cellML.VariableSetAsWanted(MeganModel, "parameters/XB_cycling")
 
@@ -290,7 +290,7 @@ mass_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PAR
 F_total_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/F_total")
 XB_cycling_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/XB_cycling")
 
-active_tension_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/active_tension")
+active_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/active")
 SL_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/SL")
 Vm_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/Vm")
 Ca_i_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/Ca_i")
@@ -314,7 +314,7 @@ kp_nT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.IN
 # and the arrays to store them in
 
 Vm = []
-active_tension = [] 
+active = [] 
 Ca_i = []
 afterload = []
 F_total = []
@@ -373,7 +373,7 @@ time = []
 value = 0.0
 if cellmlNodeThisComputationalNode:
     time.append(currentTime)
-    active_tension.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_tension_component))
+    active.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_component))
     SL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SL_component)) 
     Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
     Ca_i.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
@@ -476,7 +476,7 @@ while currentTime < timeStop:
     #print "Time: " + str(currentTime)
     if cellmlNodeThisComputationalNode:
         time.append(currentTime)
-        active_tension.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_tension_component))
+        active.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_component))
         SL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SL_component))
         Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
         Ca_i.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
@@ -511,7 +511,7 @@ import csv
 with open('results_isometric_total.csv', "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     for i in range(0, len(time)):
-        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active_tension[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i]]
+        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i]]
         resultswriter.writerow(results_row)
 
 selection= 15
@@ -519,17 +519,8 @@ end_point= selection*1000
 with open('results_isometric.csv', "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     for i in range(end_point-1000, end_point):
-        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active_tension[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i]]
+        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i]]
         resultswriter.writerow(results_row)
-
-##with open('End_Systolic.csv', "a") as csvfile: # the a means append ... this keeps the old data
-##    resultswriter = csv.writer(csvfile, dialect='excel')
-##    for i in range(0, len(active_tension)):
-##        results_row = [time[i], SLset[i], F_total[i], Ca_i[i]]
-##        resultswriter.writerow(results_row)
-##    csvfile.close()
-
-
 
 # Export the results, here we export them as standard exnode, exelem files
 if outputFrequency != 0:

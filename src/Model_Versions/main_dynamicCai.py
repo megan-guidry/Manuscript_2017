@@ -1,7 +1,7 @@
 #the original executed file is 'Workloop_protocol_with_passive_cycling2.py'
 import sys
 #preset_afterloads = [0.08, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]
-preset_afterloads = [0.6]
+preset_afterloads = [0.8]
 print range(len(preset_afterloads))
 count = 0
 
@@ -9,7 +9,7 @@ while count < len(preset_afterloads):
     
     value_afterload = preset_afterloads[count-1]
     user_number = count + 1
-    execfile(r'Workloop_protocol_with_passive_cycling_dynamicCai.py')
+    execfile(r'Workloop_protocol_dynamicCai.py')
     count += 1
     print count
 

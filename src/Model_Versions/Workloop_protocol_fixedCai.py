@@ -8,7 +8,7 @@ from __future__ import print_function
 import sys, os, math
 # Make sure $OPENCMISS_ROOT/cm/bindings/python is first in our PYTHONPATH.
 sys.path.insert(1, os.path.join((os.environ['OPENCMISS_ROOT'],'cm','bindings','python')))
-import main
+import main_fixedCai as main
 
 periodTime = 0
 switch = 0
@@ -69,34 +69,6 @@ def force_greater_than_afterload():
             cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 1)
             step = 1         
             
-# If the Sarcomere length starts increasing then SEon will switch to 0 (isometric)
-##def SL_increasing():
-##    global yes
-##    global YES
-##    def SEon_Zero():
-##        yes = 0
-##        for element in [(int(SEon[-2]), int(SEon[-3]), int(SEon[-4]))]:
-##            if element == int(0):
-##                yes = 1
-##                
-##    global step
-##    global element
-##    global SEon
-##    
-##    SEon_Zero()
-##    if len(SL) > 5: # This is just to make sure there are 10 elements in the list SL (10 is a random number)
-##        if int(SEon[-1]) == 1 and yes == 1: #yes was originally SEon_Zero
-##            if cellmlNodeThisComputationalNode:
-##                cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 1)
-##                SL_increasing = 1
-##                return SL_increasing
-##        else:
-##            if SL[-1] > SL[-2]: # if the last value in SL ([-1]) is greater than the 2nd to last value in SL we know SL is increasing, so change to isometric (non shortening)
-##                
-##                if cellmlNodeThisComputationalNode:
-##                    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
-##                    step = 2
-
 def SL_increasing():
     global step
     if len(SL) > 5 and SL[-1] > SL[-2] > SL[-3]:
@@ -104,17 +76,10 @@ def SL_increasing():
                     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
                     step = 2
 
-##def SL_increasing():
-##    global step
-##    if time[-1] >= 251.7:
-##        if cellmlNodeThisComputationalNode:
-##                    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
-##                    step = 2
-
 #If calcium has returned to diastolic levels then the sarcomere can return to its resting length (linearly)
 def sarcomere_lengthen():
     global step
-    if Ca_i[-1] <= 0.1 and time[-1] >= 500: # check just makes it so that the previous if statement must be achieved before this one can be achieved
+    if Ca_i[-1] <= 0.1 and iteration_time[-1] >= 700: # check just makes it so that the previous if statement must be achieved before this one can be achieved
         # this if statement is --> if the last value of intracellular calcium calculated is less than or equal to the initial value of calcium then allow the sarcomere to return to its starting length (SLset)
         if cellmlNodeThisComputationalNode:
             cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 2)
@@ -180,11 +145,22 @@ value_SLset = 2.3 #original value is 2.27
 value_afterload = main.value_afterload
 timeStop = 5000 #ms
 value_TmpC =  23 #Celsius
-value_tstart =  50 #ms
 value_x_0 = 0.007 #micrometre
 value_stimTime = 333 #ms
 value_stepStart = 400 #ms
 value_finalLambda = 1 #dimensionless
+
+# Setting Cai2+ parameters
+value_tstart =  main.value_tstart #ms
+value_Tau1 = main.value_Tau1
+value_Tau2 = main.value_Tau2
+value_Tau3 = main.value_Tau3
+value_Ca_dia = main.value_Ca_dia
+value_a1 = main.value_a1
+value_b = main.value_b
+value_k1 = main.value_k1
+value_c = main.value_c
+
 # this is used in the integration of the CellML model
 odeTimeStep = 0.01 # [ms?] 0.01 originally
 # this is used in the dummy monodomain problem/solver
@@ -341,13 +317,22 @@ cellML.VariableSetAsKnown(MeganModel, "parameters/SEon")
 cellML.VariableSetAsKnown(MeganModel, "parameters/t")
 cellML.VariableSetAsKnown(MeganModel, "parameters/iteration_time")
 cellML.VariableSetAsKnown(MeganModel, "parameters/mass")
+
 cellML.VariableSetAsKnown(MeganModel, "parameters/tstart")
+cellML.VariableSetAsKnown(MeganModel, "parameters/Tau1")
+cellML.VariableSetAsKnown(MeganModel, "parameters/Tau2")
+cellML.VariableSetAsKnown(MeganModel, "parameters/Tau3")
+cellML.VariableSetAsKnown(MeganModel, "parameters/Ca_dia")
+cellML.VariableSetAsKnown(MeganModel, "parameters/a1")
+cellML.VariableSetAsKnown(MeganModel, "parameters/b")
+cellML.VariableSetAsKnown(MeganModel, "parameters/k1")
+cellML.VariableSetAsKnown(MeganModel, "parameters/c")
 
 
 
 
 #Below are the variables that we want to get from the CellML model 
-cellML.VariableSetAsWanted(MeganModel, "parameters/active_tension")
+cellML.VariableSetAsWanted(MeganModel, "parameters/active")
 cellML.VariableSetAsWanted(MeganModel, "parameters/passive")
 cellML.VariableSetAsWanted(MeganModel, "parameters/preload")
 cellML.VariableSetAsWanted(MeganModel, "parameters/F_total")
@@ -431,7 +416,6 @@ firstNodeDomain = decomposition.NodeDomainGet(firstNodeNumber, 1)
 lastNodeDomain = decomposition.NodeDomainGet(lastNodeNumber, 1)
 
 # set up the indices of the fields we want to grab
-#stimTime_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/stimTime")
 stepStart_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/stepStart")
 finalLambda_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/finalLambda")
 SLset_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/SLset")
@@ -439,12 +423,21 @@ afterload_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldType
 SEon_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/SEon")
 t_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/t")
 iteration_time_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/iteration_time")
+
 tstart_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/tstart")
+Tau1_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/Tau1")
+Tau2_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/Tau2")
+Tau3_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/Tau3")
+Ca_dia_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/Ca_dia")
+a1_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/a1")
+b_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/b")
+k1_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/k1")
+c_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/c")
 
 mass_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/mass")
 
 TmpC_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.PARAMETERS, "parameters/TmpC")
-active_tension_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/active_tension")
+active_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/active")
 passive_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/passive")
 preload_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/preload")
 SL_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/SL")
@@ -452,9 +445,8 @@ integral_force_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFiel
 F_total_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/F_total")
 dTropTot_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/dTropTot")
 XB_cycling_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/XB_cycling")
-#Vm_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/Vm")
 Ca_i_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/Ca_i")
-#dSL_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/dSL")
+
 
 gxbT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/gxbT")
 XBpostr_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/XBpostr")
@@ -473,6 +465,7 @@ P_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERM
 N_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/N")
 kn_pT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/kn_pT")
 kp_nT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/kp_nT")
+
 # and the arrays to store them in
 
 stepStart = []
@@ -480,7 +473,7 @@ finalLambda = []
 stimTime = []
 TmpC = []
 Vm = []
-active_tension = [] 
+active= [] 
 Ca_i = []
 dSL = []
 SLset = []
@@ -489,8 +482,11 @@ integral_force = []
 F_total = []
 dTropTot = []
 XB_cycling = []
-tstart = []
 iteration_time = []
+
+tstart = []
+
+
 
 gxbT = []
 XBpostr = []
@@ -535,7 +531,16 @@ if cellmlNodeDomain == computationalNodeNumber:
     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, afterload_component, value_afterload)
     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, value_SEon)
     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, mass_component, value_mass)
+    
     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, tstart_component, value_tstart)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Tau1_component, value_Tau1)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Tau2_component, value_Tau2)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Tau3_component, value_Tau3)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_dia_component, value_Ca_dia)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, a1_component, value_a1)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, b_component, value_b)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, k1_component, value_k1)
+    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, c_component, value_c)
     
 
 #DOC-START define monodomain problem
@@ -557,7 +562,6 @@ time = []
 value = 0.0
 if cellmlNodeThisComputationalNode:
     time.append(currentTime)
-    #stimTime.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, stimTime_component))
     TmpC.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, TmpC_component))
     SEon.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component))
     t_interval.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, t_component))
@@ -565,7 +569,7 @@ if cellmlNodeThisComputationalNode:
     finalLambda.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, finalLambda_component))
     SLset.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SLset_component))
     afterload.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, afterload_component))
-    active_tension.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_tension_component))
+    active.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_component))
     passive.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, passive_component))
     preload.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, preload_component))
     SL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SL_component))
@@ -594,9 +598,7 @@ if cellmlNodeThisComputationalNode:
     kn_pT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kn_pT_component))
     kp_nT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kp_nT_component))
     
-    #Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
     Ca_i.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
-    #dSL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dSL_component))
 
 #Create the problem control loop
 problem.ControlLoopCreateStart()
@@ -653,7 +655,7 @@ solverEquations.BoundaryConditionsCreateFinish()
 # but does allow up to test model integration in Iron.
 F = F_total[0]
 XBc = XB_cycling[0]
-T = active_tension[0]
+T = active[0]
 SL_T = SL[0]
 periodTime = 0
 switch = 0
@@ -717,7 +719,7 @@ while currentTime < timeStop:
         finalLambda.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, finalLambda_component))
         SLset.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SLset_component))
         afterload.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, afterload_component))
-        T = cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_tension_component)
+        T = cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, active_component)
         F = cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, F_total_component)
         dTropTot.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dTropTot_component))
         XBc = cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, XB_cycling_component)
@@ -744,16 +746,14 @@ while currentTime < timeStop:
         kn_pT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kn_pT_component))
         kp_nT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kp_nT_component))
         
-        active_tension.append(T)
+        active.append(T)
         SL_T = cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SL_component)
         SL.append(SL_T)
         IT.append(it)
         integral_force.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, integral_force_component))
         F_total.append(F)
         XB_cycling.append(XBc)
-        #Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
         Ca_i.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
-        #dSL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dSL_component))
         testt.append(SEon[-1])
         YES.append(yes)
 
@@ -766,75 +766,26 @@ while currentTime < timeStop:
         
     get_loop_info() # This function generates the top and bottom curve in the selected workloop
 
-    
-   
-        
-"""
-import numpy as np
-from scipy.integrate import simps
-from numpy import trapz
-
-minSL_top = min(SL_top)
-maxSL_top = max(SL_top)
-SLstep_top = (maxSL_top[1] - minSL_top[1])/ len(SL_top)
-
-minSL_bottom = min(SL_bottom)
-maxSL_bottom = max(SL_bottom)
-SLstep_bottom = (maxSL_bottom - minSL_bottom)/ len(SL_bottom)
-
-
-
-#Separately finding the area under the top curve and the area under the bottom curve
-area_top = trapz(active_tension_top, dx=SLstep_top)
-area_bottom = trapz(active_tension_bottom, dx=SLstep_bottom)
-
-print('area_top= ', area_top)
-print('area_bottom= ', area_bottom)
-
-workloop_area = area_top - area_bottom
-"""
-
 
 # save the results
 import csv
 
 
-
-## saving the area(work) and afterload results
-
-"""
-area_afterload_results = [value_afterload, workloop_area]
-
-f = open('area_afterload.csv','a')
-w = csv.writer(f, dialect='excel')
-w.writerow(area_afterload_results)
-f.close()
-"""
-
 with open('wrkloop.csv', "a") as csvfile: # the a means append ... this keeps the old data
     resultswriter = csv.writer(csvfile, dialect='excel')
     for i in range(0, len(F_total_WL)):
-        results_row = [time[i], SL_WL[i], active_tension[i], F_total_WL[i], XB_cycling[i], Ca_i[i]]
+        results_row = [time[i], SL_WL[i], active[i], F_total_WL[i], XB_cycling[i], Ca_i[i]]
         resultswriter.writerow(results_row)
     csvfile.close()
         
 with open('resultsALL.csv', "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
-    header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
+    header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
     resultswriter.writerow(header_row)
     for i in range(0, len(time)):
-        results_row = [time[i], SL[i], active_tension[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i]]
+        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i]]
         resultswriter.writerow(results_row)
 
-##end_point = iteration_value*10000 + 1
-##print(end_point)
-##with open('resultsSINGLE.csv', "a") as csvfile:
-##    resultswriter = csv.writer(csvfile, dialect='excel')
-##    for i in range(end_point-10000, end_point):
-##        results_row = [time[i], active_tension[i], Ca_i[i], SL[i], F_total[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i]]
-##        resultswriter.writerow(results_row)
-##        i+= 0.1
-        
 # Export the results, here we export them as standard exnode, exelem files
 if outputFrequency != 0:
     fields = CMISS.Fields()
@@ -846,7 +797,7 @@ if outputFrequency != 0:
 
 ##A: time[i]
 ##B: SL[i],
-##C: active_tension[i],
+##C: active[i],
 ##D: F_total[i],
 ##E: Ca_i[i],
 ##F: integral_force[i],

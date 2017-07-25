@@ -30,7 +30,7 @@
     <import xlink:href="QuickReleaseProtocol.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="LambdaDotTransient"/>
     </import>
-    <import xlink:href="RiceTran_workloop_cycling_dynamicCai.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="RiceTran_XB.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="RiceTran"/>
     </import>
     <!-- import model1Hinch -->
@@ -39,7 +39,7 @@
     </component>
     <component name="parameters">
         <!-- Variables added to this component-->
-        <variable units="dimensionless" public_interface="in" name="active_tension" />
+        <variable units="dimensionless" public_interface="in" name="active" />
         <variable units="micromolar" public_interface="in" name="Ca_i" /> 
         <!-- <variable units="millisecond" public_interface="in" name="stimTime" /> -->
         <variable units="celsius" public_interface="in" name="TmpC" />
@@ -80,7 +80,7 @@
     
         <!-- original variables in this component -->
         <variable initial_value="1.0" name="initialLambda" public_interface="out" units="dimensionless"/>
-        <variable initial_value="0.92" name="finalLambda" public_interface="out" units="dimensionless"/>
+        <variable initial_value="1.0" name="finalLambda" public_interface="out" units="dimensionless"/>
         <variable initial_value="50" name="stepStart" public_interface="out" units="millisecond"/>
         <variable initial_value="3" name="stepDuration" public_interface="out" units="millisecond"/>
         <variable initial_value="1" name="VelocitySwitch" public_interface="out" units="dimensionless"/>
@@ -121,7 +121,7 @@
         <map_variables variable_1="velocitySF" variable_2="velocitySF"/>
         <map_variables variable_1="initialLambda" variable_2="lambda"/>
         <map_variables variable_1="xbmodsp" variable_2="xbmodsp"/>
-        <map_variables variable_1="active_tension" variable_2="active_tension"/>
+        <map_variables variable_1="active" variable_2="active"/>
         <map_variables variable_1="TmpC" variable_2="TmpC"/>
         <map_variables variable_1="SL" variable_2="SL"/> 
         <map_variables variable_1="SLrest" variable_2="SLrest"/>

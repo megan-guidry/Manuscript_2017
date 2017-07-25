@@ -30,7 +30,7 @@
     <import xlink:href="QuickReleaseProtocol.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="LambdaDotTransient"/>
     </import>
-    <import xlink:href="RiceTran_workloop_cycling_fixedCai.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="RiceTran_XB.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="RiceTran"/>
     </import>
     <!-- import model1Hinch -->
@@ -39,7 +39,7 @@
     </component>
     <component name="parameters">
         <!-- Variables added to this component-->
-        <variable units="dimensionless" public_interface="in" name="active_tension" />
+        <variable units="dimensionless" public_interface="in" name="active" />
         <variable units="micromolar" public_interface="in" name="Ca_i" /> 
         <!-- <variable units="millisecond" public_interface="in" name="stimTime" /> -->
         <variable units="celsius" public_interface="in" name="TmpC" />
@@ -91,23 +91,23 @@
         <variable initial_value="1" name="xbmodsp" public_interface="out" units="dimensionless"/>
         
         <variable name="tstart" public_interface="out"
-			initial_value="2.2184" units="millisecond" />
+			initial_value="2.21842617" units="millisecond" />
 		<variable name="Tau1" public_interface="out"
-			initial_value="26.49196" units="millisecond" />
+			initial_value="26.491962" units="millisecond" />
 		<variable name="Tau2" public_interface="out"
-			initial_value="28.747" units="millisecond" />
+			initial_value="28.7470311" units="millisecond" />
         <variable name="Tau3" public_interface="out"
-			initial_value="108.855" units="millisecond" />
+			initial_value="108.854814" units="millisecond" />
         <variable name="Ca_dia" public_interface="out"
-			initial_value="0.0894" units="micromolar" />
+			initial_value="0.0894001" units="micromolar" />
         <variable name="a1" public_interface="out"
-			initial_value="0.216216" units="dimensionless" />
+			initial_value="0.21621596" units="dimensionless" />
         <variable name="b" public_interface="out"
-			initial_value="33.1457" units="millisecond" />
+			initial_value="33.1456627" units="millisecond" />
         <variable name="k1" public_interface="out"
-			initial_value="1.8330" units="dimensionless" />
+			initial_value="1.83302661" units="dimensionless" />
         <variable name="c" public_interface="out"
-			initial_value="63.86981" units="millisecond" />
+			initial_value="63.8698117" units="millisecond" />
 
     </component>
     <connection>
@@ -150,7 +150,7 @@
         <map_variables variable_1="velocitySF" variable_2="velocitySF"/>
         <map_variables variable_1="initialLambda" variable_2="lambda"/>
         <map_variables variable_1="xbmodsp" variable_2="xbmodsp"/>
-        <map_variables variable_1="active_tension" variable_2="active_tension"/>
+        <map_variables variable_1="active" variable_2="active"/>
         <map_variables variable_1="TmpC" variable_2="TmpC"/>
         <map_variables variable_1="SL" variable_2="SL"/> 
         <map_variables variable_1="SLrest" variable_2="SLrest"/>

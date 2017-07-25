@@ -116,7 +116,7 @@
         <!-- inputs -->
         <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
         <variable name="Ca_i" private_interface="out" public_interface="in" units="micromolar"/>
-        <variable name="active_tension" private_interface="in" public_interface="out" units="dimensionless"/>
+        <variable name="active" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="preload" private_interface="in" public_interface="out" units="unit_normalised_force"/>
         <variable name="passive" private_interface="in" public_interface="out" units="unit_normalised_force"/>
         <variable initial_value="23" name="TmpC" private_interface="out" public_interface="out" units="celsius"/>
@@ -2285,10 +2285,9 @@
                 </apply>      
             </apply>
             
-            
             <apply>
                 <eq/>
-                <ci>passive</ci>                
+                <ci>passive</ci>
                 <ci>F_titin</ci> 
             </apply>
             
@@ -2300,8 +2299,13 @@
                 <ci>active</ci> 
                 <ci>passive</ci> 
                 </apply>
-            </apply>
+            </apply> 
             
+            <!-- <apply>
+                <eq/>
+                <ci>F_total</ci>
+                <ci>active</ci> 
+            </apply> -->
             
             <apply>
                 <eq/>
@@ -2405,7 +2409,7 @@
                             <cn cellml:units="dimensionless">2</cn>
                         </apply>
                     </piece>
-                    <piece>
+                     <piece>
                         <apply>
                         <times/>
                             <ci>lambda_dot</ci>
@@ -2829,7 +2833,7 @@
         <map_variables variable_1="SLrest" variable_2="SLrest"/>
         <map_variables variable_1="SLset" variable_2="SLset"/>
         <map_variables variable_1="time" variable_2="time"/>
-        <map_variables variable_1="active_tension" variable_2="active_tension"/>
+        <map_variables variable_1="active" variable_2="active"/>
         <map_variables variable_1="SL" variable_2="SL"/>
         <map_variables variable_1="afterload" variable_2="afterload"/>
         <map_variables variable_1="preload" variable_2="preload"/>
