@@ -194,8 +194,16 @@ A Simplified Local Control Model of Calcium-Induced Calcium Release in Cardiac V
       <variable units="mV" name="Vm" private_interface="in" public_interface="out"/>
 	  <variable units="ms" public_interface="in"
 		  private_interface="out" name="time" />
-	  <variable units="micromolar" public_interface="out"
-		  private_interface="in" name="Ca_i" /> <!-- why is private interface in??: this was removed -->
+	  <variable units="micromolar" public_interface="out" private_interface="in" name="Ca_i" /> 
+      
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_LCC" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_RyR" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_SERCA" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_SR" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_NaCa" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_pCa" />
+      <variable units="micromolar_per_ms" public_interface="out" private_interface="in" name="I_CaB" />
+      
    </component>
    <component name="cell_geometry">
       <variable cmeta:id="id_00001" initial_value="25.84e3" name="V_myo" public_interface="out" units="um3"/>
@@ -2739,6 +2747,28 @@ A Simplified Local Control Model of Calcium-Induced Calcium Release in Cardiac V
       <map_components component_1="interface" component_2="membrane"/>
       <map_variables variable_1="time" variable_2="time"/>
    </connection>
+   
+   <connection>
+      <map_components component_1="interface" component_2="SERCA"/>
+      <map_variables variable_1="I_SERCA" variable_2="I_SERCA"/>
+   </connection>
+   <connection>
+      <map_components component_1="interface" component_2="SR_Ca_leak_current"/>
+      <map_variables variable_1="I_SR" variable_2="I_SR"/>
+   </connection>
+   <connection>
+      <map_components component_1="interface" component_2="Na_Ca_Exchanger"/>
+      <map_variables variable_1="I_NaCa" variable_2="I_NaCa"/>
+   </connection>
+   <connection>
+      <map_components component_1="interface" component_2="Sarcolemmal_Ca_pump"/>
+      <map_variables variable_1="I_pCa" variable_2="I_pCa"/>
+   </connection>
+   <connection>
+      <map_components component_1="interface" component_2="Background_Ca_current"/>
+      <map_variables variable_1="I_CaB" variable_2="I_CaB"/>
+   </connection>
+   
    <connection>
       <map_components component_1="AP" component_2="membrane"/>
       <map_variables variable_1="Vm" variable_2="Vm"/>
@@ -2746,6 +2776,8 @@ A Simplified Local Control Model of Calcium-Induced Calcium Release in Cardiac V
    <connection>
       <map_components component_1="interface" component_2="CaRU"/>
       <map_variables variable_1="time" variable_2="time"/>
+      <map_variables variable_1="I_LCC" variable_2="I_LCC"/>
+      <map_variables variable_1="I_RyR" variable_2="I_RyR"/>
       <!-- removed ca_i -->
    </connection>
    <connection>
@@ -2758,7 +2790,6 @@ A Simplified Local Control Model of Calcium-Induced Calcium Release in Cardiac V
       <map_variables variable_1="dTropTot" variable_2="dTropTot"/>
       <map_variables variable_1="time" variable_2="time"/>
       <map_variables variable_1="Ca_i" variable_2="Ca_i"/>
-      
    </connection>
    <connection>
       <map_components component_1="cell_geometry" component_2="CaRU"/>

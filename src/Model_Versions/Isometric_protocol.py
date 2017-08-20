@@ -37,7 +37,7 @@ conductivity = 0.0
 # Simulation parameters
 value_mass = 50
 value_viscosity = 0.003
-value_SLset = 2.3 #original value is 2.27
+value_SLset = 2.093 #original value is 2.27
 value_afterload = 0.1
 value_stepStart = 400 #ms
 
@@ -217,6 +217,15 @@ cellML.VariableSetAsWanted(MeganModel, "parameters/P")
 cellML.VariableSetAsWanted(MeganModel, "parameters/kn_pT")
 cellML.VariableSetAsWanted(MeganModel, "parameters/kp_nT")
 
+cellML.VariableSetAsWanted(MeganModel, "parameters/dTropTot")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_LCC")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_RyR")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_SERCA")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_SR")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_NaCa")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_pCa")
+cellML.VariableSetAsWanted(MeganModel, "parameters/I_CaB")
+
 
 #DOC-START create cellml finish
 cellML.CreateFinish()
@@ -311,6 +320,15 @@ P_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERM
 N_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/N")
 kn_pT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/kn_pT")
 kp_nT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/kp_nT")
+
+dTropTot_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/dTropTot")
+I_LCC_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_LCC")
+I_RyR_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_RyR")
+I_SERCA_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_SERCA")
+I_SR_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_SR")
+I_NaCa_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_NaCa")
+I_pCa_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_pCa")
+I_CaB_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/I_CaB")
 # and the arrays to store them in
 
 Vm = []
@@ -339,6 +357,15 @@ P = []
 N = []
 kn_pT = []
 kp_nT = []
+
+dTropTot = []
+I_LCC = []
+I_RyR = []
+I_SERCA = []
+I_SR = []
+I_NaCa = []
+I_pCa = []
+I_CaB = []
 
 # We are using node 1 as the point in our dummy monodomain problem to integrate the CellML model
 cellmlNode = 2
@@ -400,7 +427,15 @@ if cellmlNodeThisComputationalNode:
     N.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, N_component))
     kn_pT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kn_pT_component))
     kp_nT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kp_nT_component))
-    
+
+    dTropTot.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dTropTot_component))
+    I_LCC.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_LCC_component))
+    I_RyR.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_RyR_component))
+    I_SERCA.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_SERCA_component))
+    I_SR.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_SR_component))
+    I_NaCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_NaCa_component))
+    I_pCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_pCa_component))
+    I_CaB.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_CaB_component))
 
 #Create the problem control loop
 problem.ControlLoopCreateStart()
@@ -504,14 +539,22 @@ while currentTime < timeStop:
         N.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, N_component))
         kn_pT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kn_pT_component))
         kp_nT.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, kp_nT_component))
-        
+
+        dTropTot.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dTropTot_component))
+        I_LCC.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_LCC_component))
+        I_RyR.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_RyR_component))
+        I_SERCA.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_SERCA_component))
+        I_SR.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_SR_component))
+        I_NaCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_NaCa_component))
+        I_pCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_pCa_component))
+        I_CaB.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_CaB_component))
         
 # save the results
 import csv
 with open('results_isometric_total.csv', "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     for i in range(0, len(time)):
-        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i]]
+        results_row = [time[i], SL[i], afterload[i], Ca_i[i], active[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], dTropTot[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i]]
         resultswriter.writerow(results_row)
 
 selection= 15

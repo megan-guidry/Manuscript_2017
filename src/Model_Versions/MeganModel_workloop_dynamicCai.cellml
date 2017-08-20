@@ -76,6 +76,14 @@
         <variable name="kp_nT" public_interface="in" units="first_order_rate_constant"/>
         <variable name="SOVFThin" public_interface="in" units="dimensionless"/>
         <variable units="micromolar_per_ms" name="dTropTot" public_interface="in"/>
+        
+        <variable units="micromolar_per_ms" name="I_LCC" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_RyR" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_SERCA" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_SR" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_NaCa" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_pCa" public_interface="in"/>
+        <variable units="micromolar_per_ms" name="I_CaB" public_interface="in"/>
     
     
         <!-- original variables in this component -->
@@ -113,6 +121,14 @@
         <map_variables variable_1="Ca_i" variable_2="Ca_i"/>
         <!--<map_variables variable_1="stimTime" variable_2="stimTime"/> -->
         <map_variables variable_1="Vm" variable_2="Vm"/>
+        <map_variables variable_1="I_LCC" variable_2="I_LCC"/>
+        <map_variables variable_1="I_RyR" variable_2="I_RyR"/>
+        <map_variables variable_1="I_SERCA" variable_2="I_SERCA"/>
+        <map_variables variable_1="I_SR" variable_2="I_SR"/>
+        <map_variables variable_1="I_NaCa" variable_2="I_NaCa"/>
+        <map_variables variable_1="I_pCa" variable_2="I_pCa"/>
+        <map_variables variable_1="I_CaB" variable_2="I_CaB"/>
+        
         
     </connection>
     <connection>
