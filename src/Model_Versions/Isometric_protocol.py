@@ -37,7 +37,7 @@ conductivity = 0.0
 # Simulation parameters
 value_mass = 50
 value_viscosity = 0.003
-value_SLset = 2.093 #original value is 2.27
+value_SLset = 1.9001 #original value is 2.27
 value_afterload = 0.1
 value_stepStart = 400 #ms
 

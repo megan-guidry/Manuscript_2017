@@ -63,34 +63,6 @@ def force_greater_than_afterload():
         if cellmlNodeThisComputationalNode:
             cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 1)
             step = 1         
-            
-# If the Sarcomere length starts increasing then SEon will switch to 0 (isometric)
-##def SL_increasing():
-##    global yes
-##    global YES
-##    def SEon_Zero():
-##        yes = 0
-##        for element in [(int(SEon[-2]), int(SEon[-3]), int(SEon[-4]))]:
-##            if element == int(0):
-##                yes = 1
-##                
-##    global step
-##    global element
-##    global SEon
-##    
-##    SEon_Zero()
-##    if len(SL) > 5: # This is just to make sure there are 10 elements in the list SL (10 is a random number)
-##        if int(SEon[-1]) == 1 and yes == 1: #yes was originally SEon_Zero
-##            if cellmlNodeThisComputationalNode:
-##                cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 1)
-##                SL_increasing = 1
-##                return SL_increasing
-##        else:
-##            if SL[-1] > SL[-2]: # if the last value in SL ([-1]) is greater than the 2nd to last value in SL we know SL is increasing, so change to isometric (non shortening)
-##                
-##                if cellmlNodeThisComputationalNode:
-##                    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
-##                    step = 2
 
 def SL_increasing():
     global step
@@ -98,13 +70,6 @@ def SL_increasing():
         if cellmlNodeThisComputationalNode:
                     cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
                     step = 2
-
-##def SL_increasing():
-##    global step
-##    if time[-1] >= 251.7:
-##        if cellmlNodeThisComputationalNode:
-##                    cellMLParametersField.ParameterSetUpdateNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component, 0)
-##                    step = 2
 
 #If calcium has returned to diastolic levels then the sarcomere can return to its resting length (linearly)
 def sarcomere_lengthen():
@@ -787,50 +752,10 @@ while currentTime < timeStop:
         
     get_loop_info() # This function generates the top and bottom curve in the selected workloop
 
-    
-   
-        
-"""
-import numpy as np
-from scipy.integrate import simps
-from numpy import trapz
-
-minSL_top = min(SL_top)
-maxSL_top = max(SL_top)
-SLstep_top = (maxSL_top[1] - minSL_top[1])/ len(SL_top)
-
-minSL_bottom = min(SL_bottom)
-maxSL_bottom = max(SL_bottom)
-SLstep_bottom = (maxSL_bottom - minSL_bottom)/ len(SL_bottom)
-
-
-
-#Separately finding the area under the top curve and the area under the bottom curve
-area_top = trapz(active_tension_top, dx=SLstep_top)
-area_bottom = trapz(active_tension_bottom, dx=SLstep_bottom)
-
-print('area_top= ', area_top)
-print('area_bottom= ', area_bottom)
-
-workloop_area = area_top - area_bottom
-"""
-
 
 # save the results
 import csv
 
-
-
-## saving the area(work) and afterload results
-
-"""
-area_afterload_results = [value_afterload, workloop_area]
-
-f = open('area_afterload.csv','a')
-w = csv.writer(f, dialect='excel')
-w.writerow(area_afterload_results)
-f.close()
-"""
 with open('resultsALL.csv', "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB"]
@@ -846,15 +771,6 @@ with open('20th_wrkloops.csv', "a") as csvfile: # the a means append ... this ke
         results_row = [time[i], SL_WL[i], active[i], F_total_WL[i], XB_cycling[i], Ca_i[i]]
         resultswriter.writerow(results_row)
     csvfile.close()
-        
-##end_point = iteration_value*28571.5 + 1
-##print(end_point)
-##with open('resultsSINGLE.csv', "a") as csvfile:
-##    resultswriter = csv.writer(csvfile, dialect='excel')
-##    for i in range(end_point-28571, end_point):
-##        results_row = [time[i], active_tension[i], Ca_i[i], SL[i], F_total[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i]]
-##        resultswriter.writerow(results_row)
-##        i+= 0.1
         
 # Export the results, here we export them as standard exnode, exelem files
 if outputFrequency != 0:

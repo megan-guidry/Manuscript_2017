@@ -1,19 +1,19 @@
 #the original executed file is 'Workloop_protocol_with_passive_cycling2.py'
 import sys
 #preset_afterloads = [0.08, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]
-preset_afterloads = [0.6]
+preset_afterloads = [0.2576]
 print range(len(preset_afterloads))
 count = 0
 
-value_tstart = 2.21842617
-value_Tau1 = 26.491962
-value_Tau2 = 28.7470311
-value_Tau3 = 108.854814
-value_Ca_dia = 0.0894001
-value_a1 = 0.21621596
-value_b = 33.1456627
-value_k1 = 1.83302661
-value_c = 63.8698117
+value_tstart = 2.36169272
+value_Tau1 = 31.40873567
+value_Tau2 = 40.1918327
+value_Tau3 = 79.1466021
+value_Ca_dia = 0.08981397
+value_a1 = 0.23605426
+value_b = 37.19706502
+value_k1 = 1.76341758
+value_c = 74.94501223
 
 
 while count < len(preset_afterloads):
