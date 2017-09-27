@@ -129,6 +129,7 @@
         <variable initial_value="2.3" name="SLset" private_interface="out" public_interface="out" units="micrometre"/>
         <variable name="xbmodsp" private_interface="out" public_interface="in" units="dimensionless"/>
         <variable name="dTropTot" private_interface="in" public_interface="out" units="micromolar_per_millisecond"/>
+        <variable name="Tropreg" private_interface="in" public_interface="out" units="dimensionless"/>
         <variable name="SL" private_interface="in" public_interface="out" units="micrometre"/>
         <variable name="afterload" private_interface="in" public_interface="out" units="unit_normalised_force"/>
         <variable name="integral_force" private_interface="in" public_interface="out" units="unit_normalised_force_millisecond"/>
@@ -388,7 +389,7 @@
         <variable initial_value="0.5" name="kn_p" units="first_order_rate_constant"/>
         <variable initial_value="0.05" name="kp_n" units="first_order_rate_constant"/>
         <variable initial_value="1" name="koffmod" units="dimensionless"/>
-        <variable name="Tropreg" units="dimensionless"/>
+        <variable name="Tropreg" public_interface="out" units="dimensionless"/>
         <variable name="permtot" units="dimensionless"/>
         <variable name="inprmt" units="dimensionless"/>
         <variable initial_value="7.15" name="pH" units="dimensionless"/>
@@ -2813,6 +2814,7 @@
         <map_variables variable_1="Ca_i" variable_2="Ca_i"/>
         <map_variables variable_1="kn_pT" variable_2="kn_pT"/>
         <map_variables variable_1="kp_nT" variable_2="kp_nT"/>
+        <map_variables variable_1="Tropreg" variable_2="Tropreg"/>
     </connection>
     <connection>
         <map_components component_1="mean_strain_of_strongly_bound_states" component_2="interface"/>

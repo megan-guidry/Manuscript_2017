@@ -76,6 +76,7 @@
         <variable name="kp_nT" public_interface="in" units="first_order_rate_constant"/>
         <variable name="SOVFThin" public_interface="in" units="dimensionless"/>
         <variable units="micromolar_per_ms" name="dTropTot" public_interface="in"/>
+        <variable units="dimensionless" name="Tropreg" public_interface="in"/>
         
         <variable units="micromolar_per_ms" name="I_LCC" public_interface="in"/>
         <variable units="micromolar_per_ms" name="I_RyR" public_interface="in"/>
@@ -88,8 +89,8 @@
     
         <!-- original variables in this component -->
         <variable initial_value="1.0" name="initialLambda" public_interface="out" units="dimensionless"/>
-        <variable initial_value="1.0" name="finalLambda" public_interface="out" units="dimensionless"/>
-        <variable initial_value="50" name="stepStart" public_interface="out" units="millisecond"/>
+        <variable initial_value="0.92" name="finalLambda" public_interface="out" units="dimensionless"/>
+        <variable initial_value="27" name="stepStart" public_interface="out" units="millisecond"/>
         <variable initial_value="3" name="stepDuration" public_interface="out" units="millisecond"/>
         <variable initial_value="1" name="VelocitySwitch" public_interface="out" units="dimensionless"/>
         <!-- original value is 1 -->
@@ -171,6 +172,7 @@
         <map_variables variable_1="kp_nT" variable_2="kp_nT"/>
         <map_variables variable_1="SOVFThin" variable_2="SOVFThin"/>
         <map_variables variable_1="dTropTot" variable_2="dTropTot"/>
+        <map_variables variable_1="Tropreg" variable_2="Tropreg"/>
         
     </connection>
     <connection>

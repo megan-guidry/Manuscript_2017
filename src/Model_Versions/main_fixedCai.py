@@ -5,15 +5,15 @@ preset_afterloads = [0.2576]
 print range(len(preset_afterloads))
 count = 0
 
-value_tstart = 2.36169272
-value_Tau1 = 31.40873567
-value_Tau2 = 40.1918327
-value_Tau3 = 79.1466021
-value_Ca_dia = 0.08981397
-value_a1 = 0.23605426
-value_b = 37.19706502
-value_k1 = 1.76341758
-value_c = 74.94501223
+value_tstart = 2.80900835
+value_Tau1 = 36.03943529
+value_Tau2 = 45.08829658
+value_Tau3 = 72.90385783
+value_Ca_dia = 0.08968451
+value_a1 = 0.27926453
+value_b = 37.66516463
+value_k1 = 1.67887931
+value_c = 82.71763373
 
 
 while count < len(preset_afterloads):
