@@ -416,9 +416,7 @@ F_total_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.
 dTropTot_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/dTropTot")
 Tropreg_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/Tropreg")
 XB_cycling_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/XB_cycling")
-#Vm_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/Vm")
 Ca_i_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/Ca_i")
-#dSL_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/dSL")
 
 gxbT_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.INTERMEDIATE, "parameters/gxbT")
 XBpostr_component = cellML.FieldComponentGet(MeganModel, CMISS.CellMLFieldTypes.STATE, "parameters/XBpostr")
@@ -579,9 +577,7 @@ if cellmlNodeThisComputationalNode:
     I_pCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_pCa_component))
     I_CaB.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_CaB_component))
     
-    #Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
     Ca_i.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
-    #dSL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dSL_component))
 
 #Create the problem control loop
 problem.ControlLoopCreateStart()
@@ -733,9 +729,7 @@ while currentTime < timeStop:
         integral_force.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, integral_force_component))
         F_total.append(F)
         XB_cycling.append(XBc)
-        #Vm.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Vm_component))
         Ca_i.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, Ca_i_component))
-        #dSL.append(cellMLStateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, dSL_component))
         testt.append(SEon[-1])
         YES.append(yes)
 
@@ -761,21 +755,15 @@ while currentTime < timeStop:
 # save the results
 import csv
 
-with open('resultsALL.csv', "a") as csvfile:
+fileName = 'WL_D_afterload' + str(value_afterload) + '.csv'
+
+with open(fileName, "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB", "Tropreg"]
     resultswriter.writerow(header_row)
     for i in range(0, len(time)):
         results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i], Tropreg[i]]
         resultswriter.writerow(results_row)
-
-
-with open('20th_wrkloops.csv', "a") as csvfile: # the a means append ... this keeps the old data
-    resultswriter = csv.writer(csvfile, dialect='excel')
-    for i in range(542865, 571431):
-        results_row = [time[i], SL_WL[i], active[i], F_total_WL[i], XB_cycling[i], Ca_i[i]]
-        resultswriter.writerow(results_row)
-    csvfile.close()
         
 # Export the results, here we export them as standard exnode, exelem files
 if outputFrequency != 0:
@@ -785,6 +773,13 @@ if outputFrequency != 0:
     fields.ElementsExport("Monodomain","FORTRAN")
     fields.Finalise()
 
+with open('Output_Data/' + fileName, "a") as csvfile:
+    resultswriter = csv.writer(csvfile, dialect='excel')
+    header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB", "Tropreg"]
+    resultswriter.writerow(header_row)
+    for i in range(0, len(time)):
+        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i], Tropreg[i]]
+        resultswriter.writerow(results_row)
 
 ##A: time[i]
 ##B: SL[i],
