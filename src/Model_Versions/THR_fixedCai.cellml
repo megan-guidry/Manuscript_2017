@@ -30,7 +30,7 @@
     <import xlink:href="QuickReleaseProtocol.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="LambdaDotTransient"/>
     </import>
-    <import xlink:href="RiceTran_XB.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="cross-bridge.cellml" xmlns:xlink="http://www.w3.org/1999/xlink">
         <component component_ref="interface" name="RiceTran"/>
     </import>
     <!-- import model1Hinch -->

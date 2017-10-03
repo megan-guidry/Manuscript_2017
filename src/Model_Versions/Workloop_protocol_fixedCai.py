@@ -8,7 +8,7 @@ from __future__ import print_function
 import sys, os, math
 # Make sure $OPENCMISS_ROOT/cm/bindings/python is first in our PYTHONPATH.
 sys.path.insert(1, os.path.join((os.environ['OPENCMISS_ROOT'],'cm','bindings','python')))
-import main_fixedCai as main
+import main_WL_fixedCai as main
 
 periodTime = 0
 switch = 0
@@ -144,7 +144,7 @@ value_mass = 50 #0.00666 #0.005
 value_SLset = 2.3 #original value is 2.27
 value_afterload = main.value_afterload
 value_CaiSL = main.value_CaiSL
-timeStop = 3000 #ms (5000)
+timeStop = 2000 #ms (5000)
 value_TmpC =  23 #Celsius
 value_x_0 = 0.007 #micrometre
 value_stimTime = 333 #ms
@@ -777,22 +777,25 @@ while currentTime < timeStop:
 import csv
 
 fileName = 'WL_F_afterload' + str(value_afterload) + '_CaiSL' + str(value_CaiSL) + '.csv'
+contractionIterations = timeStop/ 1000 #Calculates the number of iterations in this simulation
+cellRange = math.ceil(timeStop/outputTimeStep) #Calculate the number of cells produced by this simulation
+oneIteration = math.ceil(cellRange/contractionIterations)
         
 with open(fileName, "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
     header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
     resultswriter.writerow(header_row)
-    for i in range(0, len(time)):
+    for i in range(int(len(time) - oneIteration), len(time)):
         results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i], Tropreg[i]]
         resultswriter.writerow(results_row)
 
-with open('Output_Data/' + fileName, "w") as csvfile:
-    resultswriter = csv.writer(csvfile, dialect='excel')
-    header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
-    resultswriter.writerow(header_row)
-    for i in range(0, len(time)):
-        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i], Tropreg[i]]
-        resultswriter.writerow(results_row)
+##with open('Output_Data/' + fileName, "w") as csvfile:
+##    resultswriter = csv.writer(csvfile, dialect='excel')
+##    header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
+##    resultswriter.writerow(header_row)
+##    for i in range(0, len(time)):
+##        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i], Tropreg[i]]
+##        resultswriter.writerow(results_row)
 
 # Export the results, here we export them as standard exnode, exelem files
 if outputFrequency != 0:
