@@ -139,7 +139,7 @@ value_mass = 50 #0.00666 #0.005
 
 value_SLset = 2.3 #original value is 2.27
 value_afterload = main_WL_dynamicCai.value_afterload
-timeStop = 2000 #ms
+timeStop = 20000 #ms
 value_TmpC =  23 #Celsius
 value_x_0 = 0.007 #micrometre
 value_stimTime = 333 #ms
@@ -494,6 +494,8 @@ I_NaCa = []
 I_pCa = []
 I_CaB = []
 
+ESmarker = []
+
 # Do i need to put SLset and afterload here??
 
 # We are using node 1 as the point in our dummy monodomain problem to integrate the CellML model
@@ -533,6 +535,7 @@ time = []
 value = 0.0
 if cellmlNodeThisComputationalNode:
     time.append(currentTime)
+    ESmarker.append(0)
     #stimTime.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, stimTime_component))
     TmpC.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, TmpC_component))
     SEon.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component))
@@ -743,7 +746,10 @@ while currentTime < timeStop:
         I_pCa.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_pCa_component))
         I_CaB.append(cellMLIntermediateField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, I_CaB_component))
         
-        
+        if SEon[-2] == 1 and SEon[-1] == 0:
+            ESmarker.append(1)
+        else:
+            ESmarker.append(0)
         
         print(it)
         print(step)
@@ -762,10 +768,10 @@ oneIteration = math.ceil(cellRange/contractionIterations)
 
 with open(fileName, "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
-    header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB", "Tropreg"]
+    header_row = ["time", "SL", "active_tension", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "ESmarker", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB", "Tropreg"]
     resultswriter.writerow(header_row)
     for i in range(int(len(time) - oneIteration), len(time)):
-        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i], Tropreg[i]]
+        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], ESmarker[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i], Tropreg[i]]
         resultswriter.writerow(results_row)
         
 # Export the results, here we export them as standard exnode, exelem files

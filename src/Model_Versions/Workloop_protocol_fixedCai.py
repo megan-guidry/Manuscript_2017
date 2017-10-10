@@ -517,6 +517,8 @@ N = []
 kn_pT = []
 kp_nT = []
 
+ESmarker = []
+
 # Do i need to put SLset and afterload here??
 
 # We are using node 1 as the point in our dummy monodomain problem to integrate the CellML model
@@ -566,6 +568,8 @@ time = []
 value = 0.0
 if cellmlNodeThisComputationalNode:
     time.append(currentTime)
+    ESmarker.append(0)
+    iteration_time.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, iteration_time_component))
     TmpC.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, TmpC_component))
     SEon.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, SEon_component))
     t_interval.append(cellMLParametersField.ParameterSetGetNode(CMISS.FieldVariableTypes.U, CMISS.FieldParameterSetTypes.VALUES, 1, 1, cellmlNode, t_component))
@@ -763,7 +767,10 @@ while currentTime < timeStop:
         testt.append(SEon[-1])
         YES.append(yes)
 
-        
+        if SEon[-2] == 1 and SEon[-1] == 0:
+            ESmarker.append(1)
+        else:
+            ESmarker.append(0)
         
         
         print(it)
@@ -783,10 +790,10 @@ oneIteration = math.ceil(cellRange/contractionIterations)
         
 with open(fileName, "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
-    header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot"]
+    header_row = ["time", "SL", "active", "F_total", "Ca_i", "integral_force", "value_afterload", "passive", "SEon", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "SOVFThin", "dTropTot", "t_interval", "iteration_time", "Tropreg", "ESmarker"]
     resultswriter.writerow(header_row)
     for i in range(int(len(time) - oneIteration), len(time)):
-        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], t_interval[i], iteration_time[i], Tropreg[i]]
+        results_row = [time[i], SL[i], active[i], F_total[i], Ca_i[i], integral_force[i], value_afterload, passive[i], SEon[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], SOVFThin[i], dTropTot[i], ESmarker[i], t_interval[i], iteration_time[i], Tropreg[i]]
         resultswriter.writerow(results_row)
 
 ##with open('Output_Data/' + fileName, "w") as csvfile:

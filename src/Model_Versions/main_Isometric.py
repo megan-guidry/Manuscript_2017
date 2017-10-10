@@ -1,6 +1,6 @@
 #the original executed file is 'Workloop_protocol_with_passive_cycling2.py'
 import sys
-preset_SL = [1.955, 2.024]
+preset_SL = [1.955, 2.024, 2.093, 2.162, 2.231, 2.3]
 print range(len(preset_SL))
 count = 0
 

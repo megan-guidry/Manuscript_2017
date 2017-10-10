@@ -555,6 +555,8 @@ oneIteration = math.ceil(cellRange/contractionIterations)
 
 with open(fileName, "a") as csvfile:
     resultswriter = csv.writer(csvfile, dialect='excel')
+    header_row = ["time", "SL", "afterload", "Ca_i", "active",  "F_total", "XB_cycling", "gxbT", "XBpostr", "hfT", "SOVFThick", "xXBpostr", "XBprer", "xXBprer", "fxbT", "hbT", "gappT", "fappT", "P", "N", "kn_pT", "kp_nT", "dTropTot", "I_LCC", "I_RyR", "I_SERCA", "I_SR", "I_NaCa", "I_pCa", "I_CaB", "Tropreg"]
+    resultswriter.writerow(header_row)
     for i in range(int(len(time) - oneIteration), len(time)):
         results_row = [time[i], SL[i], afterload[i], Ca_i[i], active[i],  F_total[i], XB_cycling[i], gxbT[i], XBpostr[i], hfT[i], SOVFThick[i], xXBpostr[i], XBprer[i], xXBprer[i], fxbT[i], hbT[i], gappT[i], fappT[i], P[i], N[i], kn_pT[i], kp_nT[i], dTropTot[i], I_LCC[i], I_RyR[i], I_SERCA[i], I_SR[i], I_NaCa[i], I_pCa[i], I_CaB[i], Tropreg[i]]
         resultswriter.writerow(results_row)
