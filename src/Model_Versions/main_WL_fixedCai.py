@@ -2,8 +2,8 @@ import sys
 import FixedCai_parameters
 
 #preset_afterloads = [0.135, 0.1911, 0.2576, 0.3359, 0.4312, 0.6, 0.9]
-preset_CaiSL = [2.024]
-preset_afterloads = [0.135, 0.1911]
+preset_CaiSL = [2.3]
+preset_afterloads = [0.135, 0.1911, 0.2576, 0.3359, 0.4312, 0.6, 0.9]
 print range(len(preset_afterloads))
 CaiSL_count = 0
 
