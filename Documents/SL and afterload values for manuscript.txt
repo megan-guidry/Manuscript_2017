@@ -1,0 +1,7 @@
+Sarcomere Length values plotted in Guidry et al 2017:
+
+1.955, 2.024, 2.093, 2.162, 2.231, 2.3
+
+Afterload values plotted in Guidry et al 2017:
+
+0.135, 0.1911, 0.2576, 0.3359, 0.4312, 0.6, 0.9
